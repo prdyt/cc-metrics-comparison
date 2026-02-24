@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Contact Center Metrics Comparison — Genesys · Cisco · Amazon Connect</title>
+<style>
+:root{--g:#2563eb;--c:#0ea5e9;--a:#f59e0b;--bg:#0f1117;--s1:#1a1d27;--s2:#1e2235;--bd:#2a2f4a;--tx:#e2e8f0;--mt:#8892a4;--gr:#22c55e;--rd:#ef4444;--yw:#eab308;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--tx);font:13px/1.5 'Segoe UI',system-ui,sans-serif;}
+/* header */
+.hdr{background:var(--s1);border-bottom:1px solid var(--bd);padding:16px 28px;display:flex;align-items:center;gap:16px;}
+.hdr h1{font-size:1.3rem;font-weight:700;}
+.bgs{display:flex;gap:6px;margin-top:5px;}
+.bg{padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600;}
+.bg-g{background:#2563eb18;color:var(--g);border:1px solid #2563eb35;}
+.bg-c{background:#0ea5e918;color:var(--c);border:1px solid #0ea5e935;}
+.bg-a{background:#f59e0b18;color:var(--a);border:1px solid #f59e0b35;}
+/* tabs */
+.tabs{background:var(--s1);border-bottom:1px solid var(--bd);padding:0 28px;display:flex;gap:2px;}
+.tab{padding:10px 18px;cursor:pointer;border:none;background:none;color:var(--mt);font-size:13px;font-weight:500;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;}
+.tab:hover{color:var(--tx);}
+.tab.on{color:var(--tx);border-bottom-color:var(--g);}
+/* pane */
+.pane{display:none;padding:20px 28px;max-width:1600px;margin:0 auto;}
+.pane.on{display:block;}
+/* toolbar */
+.tb{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+.tb input{background:var(--s1);border:1px solid var(--bd);border-radius:7px;padding:7px 12px;color:var(--tx);font-size:13px;width:280px;}
+.tb input:focus{outline:none;border-color:var(--g);}
+.tb select{background:var(--s1);border:1px solid var(--bd);border-radius:7px;padding:7px 10px;color:var(--tx);font-size:13px;cursor:pointer;}
+.tb select:focus{outline:none;border-color:var(--g);}
+.cnt{margin-left:auto;font-size:12px;color:var(--mt);}
+/* legend */
+.leg{display:flex;gap:8px;align-items:center;font-size:11px;}
+.vb{padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;}
+.v-h{background:#ef444420;color:var(--rd);}
+.v-m{background:#eab30820;color:var(--yw);}
+.v-l{background:#22c55e20;color:var(--gr);}
+.v-n{background:#2a2f4a;color:var(--mt);}
+/* table */
+.tw{overflow-x:auto;border:1px solid var(--bd);border-radius:10px;}
+table{width:100%;border-collapse:collapse;}
+thead tr{background:var(--s2);}
+th{padding:10px 14px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--mt);border-bottom:1px solid var(--bd);white-space:nowrap;}
+td{padding:11px 14px;border-bottom:1px solid var(--bd);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr.data-row:hover td{background:#ffffff04;}
+tr.sec-hdr td{background:var(--s2);color:var(--mt);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;padding:7px 14px;}
+.mn{font-weight:600;color:var(--tx);}
+.md{font-size:11px;color:var(--mt);margin-top:2px;}
+.fm{font-family:'Consolas','Courier New',monospace;font-size:11px;background:#0d1117;border:1px solid var(--bd);border-radius:5px;padding:6px 9px;margin-top:5px;color:#93c5fd;white-space:pre-wrap;word-break:break-word;}
+.fn{font-size:11px;color:var(--mt);margin-top:4px;font-style:italic;}
+.tg{font-size:10px;font-weight:700;margin-bottom:3px;}
+.tg-g{color:var(--g);}
+.tg-c{color:var(--c);}
+.tg-a{color:var(--a);}
+.blank{color:var(--mt);font-size:12px;font-style:italic;}
+.vc{text-align:center;padding-top:14px;}
+/* platform availability pills */
+.pills{display:flex;gap:3px;margin-top:4px;flex-wrap:wrap;}
+.pill{padding:1px 6px;border-radius:3px;font-size:10px;font-weight:700;}
+.pill-g{background:#2563eb18;color:var(--g);}
+.pill-c{background:#0ea5e918;color:var(--c);}
+.pill-a{background:#f59e0b18;color:var(--a);}
+/* key diff tab */
+.dg{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px;margin-bottom:20px;}
+.dc{background:var(--s1);border:1px solid var(--bd);border-radius:9px;padding:16px;}
+.dc h3{font-size:.95rem;margin-bottom:7px;}
+.dc p,.dc li{color:var(--mt);font-size:12px;}
+.dc ul{padding-left:15px;margin-top:5px;}
+.dc li{margin-bottom:3px;}
+.bh{border-left:3px solid var(--rd);}
+.bm{border-left:3px solid var(--yw);}
+.bl{border-left:3px solid var(--gr);}
+.nb{background:var(--s1);border:1px solid var(--bd);border-left:3px solid var(--yw);border-radius:6px;padding:12px 15px;font-size:12px;color:var(--mt);margin-top:16px;}
+/* simulation */
+.sl{display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start;}
+@media(max-width:860px){.sl{grid-template-columns:1fr;}}
+.si{background:var(--s1);border:1px solid var(--bd);border-radius:9px;padding:18px;position:sticky;top:16px;}
+.ig{margin-bottom:12px;}
+.ig label{display:block;font-size:11px;font-weight:700;color:var(--mt);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
+.ig input{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:6px;padding:7px 11px;color:var(--tx);font-size:13px;}
+.ig input:focus{outline:none;border-color:var(--g);}
+.ist{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--g);margin:16px 0 9px;}
+.btn{width:100%;padding:9px;background:var(--g);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;margin-top:9px;transition:opacity .15s;}
+.btn:hover{opacity:.85;}
+.btn-o{background:transparent;border:1px solid var(--bd);color:var(--tx);margin-top:5px;}
+.pb{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.pb button{padding:5px 12px;background:var(--s1);border:1px solid var(--bd);border-radius:5px;color:var(--mt);font-size:11px;cursor:pointer;transition:all .15s;}
+.pb button:hover{color:var(--tx);border-color:var(--g);}
+.rg{display:grid;gap:14px;}
+.rc{background:var(--s1);border:1px solid var(--bd);border-radius:9px;overflow:hidden;}
+.rch{background:var(--s2);padding:11px 16px;display:flex;justify-content:space-between;align-items:center;}
+.rr{display:grid;grid-template-columns:190px 1fr 1fr 1fr 110px;border-bottom:1px solid var(--bd);}
+.rr:last-child{border-bottom:none;}
+.rr.hrow{background:var(--s2);font-size:11px;font-weight:700;color:var(--mt);text-transform:uppercase;letter-spacing:.4px;}
+.rr.hrow .rc2{border-right:1px solid var(--bd);}
+.rc2{padding:11px 14px;border-right:1px solid var(--bd);}
+.rc2:last-child{border-right:none;}
+.rv{font-size:1.1rem;font-weight:700;}
+.rv-g{color:var(--g);}
+.rv-c{color:var(--c);}
+.rv-a{color:var(--a);}
+.vv{font-weight:700;}
+.vv-lo{color:var(--gr);}
+.vv-md{color:var(--yw);}
+.vv-hi{color:var(--rd);}
+.sm{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;padding:16px 18px;}
+.sv{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mt);margin-bottom:5px;}
+.sn{font-size:1.3rem;font-weight:700;}
+.sd{font-size:11px;color:var(--mt);margin-top:3px;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <h1>Contact Center Metrics Comparison</h1>
+    <div class="bgs">
+      <span class="bg bg-g">Genesys WFM</span>
+      <span class="bg bg-c">Cisco Webex CC</span>
+      <span class="bg bg-a">Amazon Connect</span>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab on" onclick="sw('chart')">Comparison Chart</button>
+  <button class="tab" onclick="sw('diff')">Key Differences</button>
+  <button class="tab" onclick="sw('sim')">Simulation &amp; Variance</button>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PANE 1 — COMPARISON CHART
+══════════════════════════════════════════════ -->
+<div id="pane-chart" class="pane on">
+  <div class="tb">
+    <input id="srch" type="text" placeholder="Search metrics..." oninput="filter()"/>
+    <select id="cat" onchange="filter()"><option value="">All Categories</option></select>
+    <select id="plat" onchange="filter()">
+      <option value="">All Platforms</option>
+      <option value="G">Genesys only</option>
+      <option value="C">Cisco only</option>
+      <option value="A">Amazon only</option>
+    </select>
+    <select id="var" onchange="filter()">
+      <option value="">Any Variance</option>
+      <option value="high">High Variance</option>
+      <option value="medium">Medium Variance</option>
+      <option value="low">Low Variance</option>
+      <option value="none">No Variance / N/A</option>
+    </select>
+    <span class="cnt" id="cnt"></span>
+    <div class="leg">
+      <span class="vb v-h">High</span>
+      <span class="vb v-m">Medium</span>
+      <span class="vb v-l">Low</span>
+      <span class="vb v-n">N/A</span>
+    </div>
+  </div>
+  <div class="tw">
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th style="width:200px">Metric</th>
+          <th style="width:290px">Genesys WFM</th>
+          <th style="width:290px">Cisco Webex CC</th>
+          <th style="width:290px">Amazon Connect</th>
+          <th style="width:100px">Variance</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PANE 2 — KEY DIFFERENCES
+══════════════════════════════════════════════ -->
+<div id="pane-diff" class="pane">
+  <h2 style="margin-bottom:18px;">Key Definitional Differences &amp; Implications</h2>
+  <div class="dg">
+    <div class="dc bh"><h3>🔴 AHT — Cisco Excludes Hold Time</h3><p>Cisco AHT = Talk + ACW only. Genesys &amp; Amazon include Hold.</p><ul><li>Cisco will always show lower AHT than Genesys/Amazon</li><li>A center with 60s avg hold → Cisco AHT is ~60s lower</li><li>For apples-to-apples: compare "Inbound Contact Total Time" in Cisco to AHT in others</li><li>Agent Statistics report in Cisco does include Hold: (Hold + Connected + Wrapup) / Handled</li></ul></div>
+    <div class="dc bh"><h3>🔴 Service Level — Denominator Differs</h3><p>The single biggest reporting discrepancy.</p><ul><li><strong>Genesys:</strong> denominator = calls distributed (answered) → higher SL%</li><li><strong>Amazon:</strong> denominator = all contacts queued (incl. abandoned) → lower SL%</li><li><strong>Cisco:</strong> percentage of answered contacts / contacts that arrived minus short calls</li><li>Example: 90 answered in threshold, 10 abandoned → Genesys ≈ 90%, Amazon ≈ 81.8%</li></ul></div>
+    <div class="dc bh"><h3>🔴 Occupancy — Three Different Denominators</h3><ul style="margin-top:7px;"><li><strong>Genesys:</strong> weighted by Forecasted IV (demand-weighted, planning focus)</li><li><strong>Cisco:</strong> divide by total login/shift time (includes non-productive time)</li><li><strong>Amazon:</strong> divide by available time (excludes non-productive time)</li><li>Amazon denominator is smallest → highest occupancy % for same contacts</li><li>Cisco includes non-productive in denominator → lowest occupancy %</li></ul></div>
+    <div class="dc bm"><h3>🟡 ASA — Weighting Difference</h3><ul style="margin-top:7px;"><li><strong>Genesys:</strong> weighted avg per 15-min timestep by calls distributed</li><li><strong>Cisco:</strong> Total Ringing Duration / Ringing Count (simple avg)</li><li><strong>Amazon:</strong> simple avg of enqueue-to-answer per contact</li><li>Results diverge during intraday volume spikes; Genesys weights busy periods more</li></ul></div>
+    <div class="dc bm"><h3>🟡 Abandonment Rate — Denominator &amp; Method</h3><ul style="margin-top:7px;"><li><strong>Genesys:</strong> "Abandons Factor" — weighted per timestep, denominator = calls distributed</li><li><strong>Amazon:</strong> simple (abandoned / queued) %</li><li>Genesys denominator is answered contacts; Cisco/Amazon use total offered</li><li>High-abandon scenarios show largest gap between platforms</li></ul></div>
+    <div class="dc bm"><h3>🟡 Genesys 15-Min Timestep Weighting</h3><p style="margin-top:7px;">All Genesys WFM metrics aggregate via weighted averages over 15-min intervals, weighted by interaction volume. This means:</p><ul><li>Busy periods drive the daily average more than quiet periods</li><li>Results differ from Cisco/Amazon simple averages during intraday variation</li><li>More accurate for staffing/planning but harder to reconcile manually</li></ul></div>
+    <div class="dc bm"><h3>🟡 AHT — Cisco Has Two Formulas</h3><p style="margin-top:7px;">Cisco Analyzer defines AHT differently across report types:</p><ul><li><strong>Agent Details / Site report:</strong> (ConnectedDuration + WrapupDuration) / ConnectedCount — <em>no hold</em></li><li><strong>Agent Statistics report:</strong> (Hold + Connected + Wrapup) / Handled — <em>hold included</em></li><li>Must know which report you're reading to interpret Cisco AHT correctly</li></ul></div>
+    <div class="dc bl"><h3>🟢 Talk Time &amp; ACW — Generally Consistent</h3><p style="margin-top:7px;">All three platforms define talk time (connected duration) and ACW (wrapup) similarly. Low variance except:</p><ul><li>Cisco explicitly tracks Inbound vs Outdial ACW separately</li><li>Amazon's ACW logic defaults to 0 (not null) when no ACW occurs</li><li>Genesys handles ACW within the AHT timestep calculation</li></ul></div>
+    <div class="dc bl"><h3>🟢 Cisco Most Granular for Agent States</h3><p style="margin-top:7px;">Cisco Analyzer tracks more agent-state sub-metrics than the other two:</p><ul><li>Separate Reserved (Ringing), Hold, Connected, Wrapup for Inbound AND Outdial</li><li>CTQ (Consult-to-Queue) Request and Answer tracked separately</li><li>Wellness Breaks metric (AI burnout detection)</li><li>Social channel variants of all agent metrics</li></ul></div>
+    <div class="dc bl"><h3>🟢 Amazon Connect Has the Most Metrics (~200+)</h3><p style="margin-top:7px;">Amazon Connect tracks many categories not in Genesys WFM or Cisco Analyzer:</p><ul><li>AI Agent / Prompt / Tool / Session metrics (40+ metrics)</li><li>Contact Lens conversational analytics (talk %, interruptions, non-talk)</li><li>Case management, bot metrics, outbound campaign metrics</li><li>Flow / IVR execution metrics</li><li>Test case execution metrics</li></ul></div>
+    <div class="dc bl"><h3>🟢 Genesys WFM — Scheduling &amp; Forecasting Native</h3><p style="margin-top:7px;">Genesys WFM has native scheduling metrics not found in Cisco or Amazon core docs:</p><ul><li>Schedule Adherence % formula (NC, UNC, ST components)</li><li>IV Forecast Accuracy (forecast vs actual, % difference)</li><li>AHT Forecast Accuracy</li><li>Coverage (FTE), Optimal Coverage, Budget calculations</li><li>Number of Agents Scheduled vs Actual</li></ul></div>
+  </div>
+  <div class="nb"><strong>Bottom Line:</strong> The three biggest discrepancies when comparing reports across platforms are <strong>Service Level</strong> (denominator methodology), <strong>AHT</strong> (Cisco excludes hold in most reports), and <strong>Occupancy</strong> (three different denominators). Always confirm the formula before benchmarking cross-platform.</div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PANE 3 — SIMULATION
+══════════════════════════════════════════════ -->
+<div id="pane-sim" class="pane">
+  <h2 style="margin-bottom:4px;">Simulation &amp; Variance Calculator</h2>
+  <p style="color:var(--mt);font-size:12px;margin-bottom:16px;">Enter contact center data to see how each platform calculates key metrics and where the numbers diverge.</p>
+  <div class="sl">
+    <div class="si">
+      <div class="pb">
+        <span style="font-size:11px;color:var(--mt);font-weight:700;align-self:center;">PRESETS:</span>
+        <button onclick="lp('s')">Small CC</button>
+        <button onclick="lp('m')">Mid-Size</button>
+        <button onclick="lp('e')">Enterprise</button>
+        <button onclick="lp('h')">High Abandon</button>
+      </div>
+      <div class="ist">Contact Volume</div>
+      <div class="ig"><label>Total Contacts Queued</label><input type="number" id="i_q" value="500"/></div>
+      <div class="ig"><label>Contacts Answered</label><input type="number" id="i_a" value="460"/></div>
+      <div class="ig"><label>Contacts Abandoned</label><input type="number" id="i_ab" value="40"/></div>
+      <div class="ig"><label>Answered Within SL Threshold</label><input type="number" id="i_sl" value="414"/></div>
+      <div class="ist">Time Metrics (seconds)</div>
+      <div class="ig"><label>Total Talk Time</label><input type="number" id="i_tk" value="138000"/></div>
+      <div class="ig"><label>Total Hold Time</label><input type="number" id="i_hd" value="27600"/></div>
+      <div class="ig"><label>Total ACW / Wrapup Time</label><input type="number" id="i_aw" value="23000"/></div>
+      <div class="ig"><label>Total Queue Wait Time (answered)</label><input type="number" id="i_qt" value="27600"/></div>
+      <div class="ist">Agent Shift Data</div>
+      <div class="ig"><label>Agent Total Login Time (sec)</label><input type="number" id="i_lt" value="57600"/></div>
+      <div class="ig"><label>Agent Available Time (sec)</label><input type="number" id="i_at" value="50000"/></div>
+      <button class="btn" onclick="runSim()">Run Simulation</button>
+      <button class="btn btn-o" onclick="lp('m');runSim()">Reset</button>
+    </div>
+    <div id="res" class="rg">
+      <div class="nb" style="margin-top:0;">Enter values and click <strong>Run Simulation</strong> to compare metrics across all three platforms.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// METRIC DATA
+// g/c/a: { f: formula string, n: note string } | null
+// v: variance "high"|"medium"|"low"|"none"
+// ══════════════════════════════════════════════════════
+const METRICS = [
+// ── CORE KPIs ─────────────────────────────────────────────────────────────────
+{cat:"Core KPIs",name:"Average Handle Time (AHT)",desc:"Mean time to fully process a contact (talk + hold + ACW)",
+ g:{f:"Σ(AHT_i × CallsHandled_i) / Σ(CallsHandled_i)\nWeighted avg per 15-min timestep, weighted by calls handled"},
+ c:{f:"Agent Details/Site:\n(Σ ConnDur + Σ WrapDur) / Σ ConnCount\n— hold excluded\n\nAgent Statistics report:\n(Hold + Connected + Wrapup) / Handled\n— hold included"},
+ a:{f:"Σ(AgentInteraction + CustomerHold + ACW)\n/ ContactCount\nAll three components always included"},
+ v:"high",note:"Cisco AHT (Agent Details) excludes hold; Genesys & Amazon include it"},
+
+{cat:"Core KPIs",name:"Average Speed of Answer (ASA)",desc:"Mean wait time from queue entry to agent answer",
+ g:{f:"Σ(ASA_i × CallsDistributed_i)\n/ Σ(CallsDistributed_i)\nWeighted avg per timestep by calls distributed"},
+ c:{f:"Inbound Reserved Total Time / Reserved Count\n= Σ RingingDuration / Σ RingingCount\n(Simple average)"},
+ a:{f:"Avg Queue Answer Time =\navg(AnswerTimestamp - EnqueueTimestamp)\nper answered contact"},
+ v:"medium",note:"Genesys weights by interval volume; others use simple average"},
+
+{cat:"Core KPIs",name:"Service Level",desc:"% contacts answered within threshold (X seconds)",
+ g:{f:"Actual SL =\nΣ(SL_i × CallsDistributed_i)\n/ Σ(CallsDistributed_i)\nDenominator = calls distributed (answered only)"},
+ c:{f:"(Contacts answered ≤ threshold\n/ (Contacts arrived - Short calls)) × 100\nDenominator excludes abandoned & short calls"},
+ a:{f:"(Contacts answered in X seconds\n/ Contacts queued) × 100\nDenominator = ALL contacts queued (incl. abandoned)"},
+ v:"high",note:"Genesys: denominator = answered; Amazon: denominator = all queued; Cisco: excludes short calls"},
+
+{cat:"Core KPIs",name:"Occupancy",desc:"% time agents spent in active work vs. available time",
+ g:{f:"Avg Occupancy Scheduled =\nΣ(Occ_i × ForecastIV_i) / Σ(ForecastIV_i)\nWeighted by forecasted interaction volume per timestep"},
+ c:{f:"((Σ ConnDur + Σ WrapDur)\n + (Σ OutdialConnDur + Σ OutdialWrapDur))\n/ (Max LogoutTimestamp - Min LoginTimestamp)\nDenominator = total login/shift time"},
+ a:{f:"(Contact handling time / Available time) × 100\n\n% Agent On Contact Time =\n(Time on contact / Available time) × 100\nDenominator = available time only"},
+ v:"high",note:"Three different denominators: Forecast IV (Genesys), login time (Cisco), available time (Amazon)"},
+
+{cat:"Core KPIs",name:"Abandonment Rate",desc:"% contacts abandoned before reaching an agent",
+ g:{f:"Abandons Factor (Actual) =\nΣ(Abandons_i × CallsDistributed_i)\n/ Σ(CallsDistributed_i)\nWeighted by calls distributed per timestep"},
+ c:{f:"Not explicitly defined as a standalone % formula\nin Analyzer documentation.\nTypically tracked via abandoned contact counts."},
+ a:{f:"(Contacts abandoned / Contacts queued) × 100\nDefinition: customer disconnected while waiting\nin queue before connecting to agent"},
+ v:"medium",note:"Genesys uses answered-calls denominator and timestep weighting; Amazon uses flat queued count"},
+
+{cat:"Core KPIs",name:"Contacts Handled",desc:"Total number of contacts successfully handled",
+ g:{f:"Actual Interaction Volume = Σ(IV_i)\nSum of interactions received/handled across timesteps"},
+ c:{f:"Contact Handled =\nΣ OutdialConnectedCount + Σ ConnectedCount\n(Inbound + Outbound combined)"},
+ a:{f:"COUNT contacts where agent was connected.\n\nContacts Handled (connected to agent) =\nCOUNT contacts with ConnectedToAgentTimestamp"},
+ v:"low"},
+
+// ── AGENT STATE & ACTIVITY ─────────────────────────────────────────────────────
+{cat:"Agent State & Activity",name:"Staff Hours / Login Duration",desc:"Total time agents were logged into the system",
+ g:{f:"Coverage – Scheduled:\nΣ AgentsCovering × 15min / PaidHoursPerDay\nFTE-based measure, not raw login time"},
+ c:{f:"Staff Hours =\nΣ RealtimeUpdateTimestamp - Σ LoginTimestamp\nRaw elapsed login duration per agent"},
+ a:{f:"Agent Contact Time = contactTime / 1000\nOnline Time = Σ agent online duration\n(Separate from idle/non-productive)"},
+ v:"medium",note:"Genesys uses FTE model; Cisco/Amazon use raw elapsed time"},
+
+{cat:"Agent State & Activity",name:"Idle Count",desc:"Number of times agent transitioned to idle state",
+ g:{f:null},
+ c:{f:"Idle Count = Σ IdleCount\n(Count of transitions into Idle state)"},
+ a:{f:"Agent Non-Productive =\nCOUNT agents in custom status\n(Real-time state metric)"},
+ v:"none"},
+
+{cat:"Agent State & Activity",name:"Total Idle Time",desc:"Cumulative time agent spent in idle/available state",
+ g:{f:"Not a standalone metric in WFM.\nTracked as adherence deviation from scheduled\navailable state."},
+ c:{f:"Total Idle Time = Σ IdleDuration\n(Cumulative duration in Idle state)"},
+ a:{f:"Agent Idle Time = idleTime / 1000\n(Converts ms to seconds)\n\n% Agent Idle Time =\n(Idle time / Available time) × 100"},
+ v:"low"},
+
+{cat:"Agent State & Activity",name:"Average Idle Time",desc:"Mean duration per idle period",
+ g:{f:null},
+ c:{f:"Avg Idle Time =\nΣ IdleDuration / Σ IdleCount"},
+ a:{f:"% Agent Idle Time =\n(Idle time / Available time) × 100\n(Rate, not avg duration)"},
+ v:"none"},
+
+{cat:"Agent State & Activity",name:"Available Count",desc:"Number of times agent entered Available state",
+ g:{f:null},
+ c:{f:"Available Count = Σ AvailableCount\n(Transitions into Available state)"},
+ a:{f:"Available =\nCOUNT agents who can take inbound contacts\n(Real-time count metric)"},
+ v:"none"},
+
+{cat:"Agent State & Activity",name:"Total Available Time",desc:"Cumulative time agent spent in Available state",
+ g:{f:null},
+ c:{f:"Total Available Time = Σ AvailableDuration"},
+ a:{f:"Included in Available time denominator\nfor % On Contact and % Idle calculations"},
+ v:"none"},
+
+{cat:"Agent State & Activity",name:"Average Available Time",desc:"Mean duration per Available state period",
+ g:{f:null},
+ c:{f:"Avg Available Time =\nΣ AvailableDuration / Σ AvailableCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Agent State & Activity",name:"Agent Answer Rate",desc:"% of routed contacts that the agent accepted",
+ g:{f:null},
+ c:{f:"Not defined as a standalone rate metric.\nNot Responding Count = Σ NotRespondedCount\n(Count, not rate)"},
+ a:{f:"Agent Answer Rate =\n(Contacts accepted / Total routing attempts) × 100"},
+ v:"none"},
+
+{cat:"Agent State & Activity",name:"Not Responding Count",desc:"Instances agent failed to respond to a routed contact",
+ g:{f:"Tracked in adherence as Noncompliant (NC) time.\n% Adherence = 100 - ((NC+UNC)×100 / (ST+UNC))"},
+ c:{f:"Not Responding Count = Σ NotRespondedCount"},
+ a:{f:"Agent Non-Response =\nCOUNT contacts routed but not answered\n\nAgent Non-Response Without Abandon =\nCOUNT voice contacts not answered\nexcluding customer abandons"},
+ v:"low"},
+
+{cat:"Agent State & Activity",name:"Not Responding Total Time",desc:"Total time agent spent in Not Responding state",
+ g:{f:null},
+ c:{f:"Not Responding Total Time = Σ NotRespondedDuration"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Agent State & Activity",name:"Average Not Responding Time",desc:"Mean duration per Not Responding instance",
+ g:{f:null},
+ c:{f:"Avg Not Responding Time =\nΣ NotRespondedDuration / Σ NotRespondedCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Agent State & Activity",name:"Agent Non-Productive Time",desc:"Time in custom status (not available, not on contact)",
+ g:{f:null},
+ c:{f:"Not broken out separately in Analyzer.\nNon-productive time implicit in Occupancy calc."},
+ a:{f:"Agent Non-Productive Time =\nnonProductiveTime / 1000\n\n% Agent Non-Productive Time =\n(Non-productive time / Available time) × 100"},
+ v:"none"},
+
+{cat:"Agent State & Activity",name:"Sudden Disconnected Count",desc:"Calls terminated immediately after connection (within threshold)",
+ g:{f:null},
+ c:{f:"Sudden Disconnected Count = Σ DisconnectedCount\n(Calls disconnected within configured time threshold)"},
+ a:{f:"Contacts Agent Hung Up First =\nCOUNT contacts where agent disconnected first"},
+ v:"none"},
+
+{cat:"Agent State & Activity",name:"Wellness Breaks",desc:"AI-detected burnout-based automated wellness breaks offered",
+ g:{f:null},
+ c:{f:"Wellness Breaks =\nCOUNT of automated wellness breaks offered\nbased on AI agent burnout detection"},
+ a:{f:null},
+ v:"none"},
+
+// ── INBOUND METRICS ────────────────────────────────────────────────────────────
+{cat:"Inbound Metrics",name:"Inbound Reserved (Ringing) Count",desc:"Times agent entered Inbound Reserved / Ringing state",
+ g:{f:null},
+ c:{f:"Inbound Reserved Count = Σ RingingCount"},
+ a:{f:"Agent Incoming Connecting Time =\nΣ connecting time for inbound-initiated contacts\n(SUM_CONNECTING_TIME_AGENT, method=INBOUND)"},
+ v:"none"},
+
+{cat:"Inbound Metrics",name:"Inbound Reserved Total Time",desc:"Total duration in Inbound Reserved (ringing) state",
+ g:{f:null},
+ c:{f:"Inbound Reserved Total Time = Σ RingingDuration"},
+ a:{f:"Agent Incoming Connecting Time =\nΣ INBOUND connecting time / 1000"},
+ v:"none"},
+
+{cat:"Inbound Metrics",name:"Average Inbound Reserved Time",desc:"Mean ringing/reserved duration per inbound contact",
+ g:{f:null},
+ c:{f:"Avg Inbound Reserved Time =\nΣ RingingDuration / Σ RingingCount"},
+ a:{f:"Avg Agent Incoming Connecting Time =\nAVG_AGENT_CONNECTING_TIME\nfiltered to INBOUND method"},
+ v:"none"},
+
+{cat:"Inbound Metrics",name:"Inbound Connected Count",desc:"Number of inbound calls connected to agent",
+ g:{f:"Total contacts distributed = Σ CallsDistributed_i"},
+ c:{f:"Inbound Connected Count = Σ ConnectedCount"},
+ a:{f:"Contacts Handled Incoming =\nCOUNT handled incoming contacts"},
+ v:"low"},
+
+{cat:"Inbound Metrics",name:"Inbound Connected Total Time (Talk)",desc:"Total talk time on inbound calls",
+ g:{f:"Included in AHT calculation\n(not broken out separately in CCPerf docs)"},
+ c:{f:"Inbound Connected Total Time = Σ ConnectedDuration\n(Excludes hold and consult time)"},
+ a:{f:"Agent Interaction Time =\nΣ AgentInteractionDuration\n(where both duration and connected timestamp present)"},
+ v:"low"},
+
+{cat:"Inbound Metrics",name:"Inbound Hold Count",desc:"Number of times callers were placed on hold",
+ g:{f:null},
+ c:{f:"Inbound Hold Count = Σ HoldCount"},
+ a:{f:"Contacts Put On Hold =\nCOUNT contacts placed on hold"},
+ v:"none"},
+
+{cat:"Inbound Metrics",name:"Inbound Hold Total Time",desc:"Total cumulative hold time for inbound contacts",
+ g:{f:"Included in AHT calculation\n(not a standalone metric in CCPerf docs)"},
+ c:{f:"Inbound Hold Total Time = Σ HoldDuration"},
+ a:{f:"Customer Hold Time =\nΣ Agent.CustomerHoldDuration"},
+ v:"low"},
+
+{cat:"Inbound Metrics",name:"Average Inbound Hold Time",desc:"Mean hold duration per inbound contact",
+ g:{f:null},
+ c:{f:"Avg Inbound Hold Time =\nΣ HoldDuration / Σ HoldCount"},
+ a:{f:"Avg Customer Hold Time =\nΣ CustomerHoldDuration\n/ contacts with hold\n\nAvg Customer Hold Time (All Contacts) =\nΣ CustomerHoldDuration / total contacts"},
+ v:"low"},
+
+{cat:"Inbound Metrics",name:"Inbound Contact Total Time",desc:"Total inbound interaction duration (talk + hold combined)",
+ g:{f:null},
+ c:{f:"Inbound Contact Total Time =\nΣ ConnectedDuration + Σ HoldDuration"},
+ a:{f:"Agent Interaction and Hold Time =\nΣ (AgentInteractionDuration + CustomerHoldDuration)\n\nAvg Interaction & Hold Time =\nΣ (Interaction + Hold) / ContactCount"},
+ v:"low"},
+
+{cat:"Inbound Metrics",name:"Average Inbound Contact Time",desc:"Mean total inbound contact duration (talk + hold)",
+ g:{f:null},
+ c:{f:"Avg Inbound Contact Time =\n(Σ ConnectedDuration + Σ HoldDuration)\n/ Σ ConnectedCount"},
+ a:{f:"Avg Agent Interaction and Hold Time =\nAVG(AgentInteractionDuration + CustomerHoldDuration)"},
+ v:"low"},
+
+{cat:"Inbound Metrics",name:"Inbound Wrapup (ACW) Count",desc:"Number of wrapup periods after inbound calls",
+ g:{f:null},
+ c:{f:"Inbound Wrapup Count = Σ WrapupCount"},
+ a:{f:"Tracked implicitly via After Contact Work Time.\nNo standalone wrapup count metric defined."},
+ v:"none"},
+
+{cat:"Inbound Metrics",name:"Inbound Wrapup Total Time",desc:"Total ACW/wrapup time after inbound contacts",
+ g:{f:"Included in AHT calculation\n(not a standalone metric in CCPerf docs)"},
+ c:{f:"Inbound Wrapup Total Time = Σ WrapupDuration"},
+ a:{f:"After Contact Work Time =\nIf ACW duration present → ACW duration\nElse if connected → 0\nFinal = Σ all results"},
+ v:"low"},
+
+{cat:"Inbound Metrics",name:"Average Inbound Wrapup Time",desc:"Mean ACW/wrapup duration per inbound contact",
+ g:{f:null},
+ c:{f:"Avg Inbound Wrapup Time =\nΣ WrapupDuration / Σ WrapupCount"},
+ a:{f:"Avg After Contact Work Time =\nΣ ACWDuration / ContactCount\n(0 if connected but no ACW recorded)"},
+ v:"low"},
+
+{cat:"Inbound Metrics",name:"Inbound Average Handle Time (AHT)",desc:"Mean total handling time for inbound contacts",
+ g:{f:"Σ(AHT_i × CH_i) / Σ(CH_i)\nWeighted avg — includes talk + hold + ACW"},
+ c:{f:"Inbound AHT =\n(Σ ConnectedDuration + Σ WrapupDuration)\n/ Σ ConnectedCount\nNote: HOLD NOT included"},
+ a:{f:"AHT = Σ(Interaction + Hold + ACW) / Contacts\nAll three components included"},
+ v:"high",note:"Cisco excludes hold; Genesys & Amazon include hold"},
+
+// ── OUTBOUND / OUTDIAL ─────────────────────────────────────────────────────────
+{cat:"Outbound / Outdial",name:"Outdial Reserved Count",desc:"Times agent entered Outdial Reserved (ringing) state",
+ g:{f:null},
+ c:{f:"Outdial Reserved Count = Σ OutdialRingingCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Outdial Reserved Total Time",desc:"Total duration in Outdial Reserved state",
+ g:{f:null},
+ c:{f:"Outdial Reserved Total Time = Σ OutdialRingingDuration"},
+ a:{f:"Agent Outbound Connecting Time =\nΣ connecting time for OUTBOUND initiated contacts / 1000"},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Average Outdial Reserved Time",desc:"Mean outdial reserved/ringing duration",
+ g:{f:null},
+ c:{f:"Avg Outdial Reserved Time =\nΣ OutdialRingingDuration / Σ OutdialRingingCount"},
+ a:{f:"Avg Agent Outbound Connecting Time =\nAVG_AGENT_CONNECTING_TIME (OUTBOUND)"},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Outdial Attempted Count",desc:"Number of outbound call attempts initiated",
+ g:{f:null},
+ c:{f:"Outdial Attempted Count = Σ OutdialRingingCount\n(All attempts, including unanswered)"},
+ a:{f:"Campaign Send Attempts = COUNT send attempt records"},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Outdial Connected Count",desc:"Successfully connected outbound calls",
+ g:{f:null},
+ c:{f:"Outdial Connected Count = Σ OutdialConnectedCount"},
+ a:{f:"Contacts Handled Outbound =\nCOUNT handled outbound contacts\n\nHuman Answered =\nCOUNT contacts answered by humans"},
+ v:"low"},
+
+{cat:"Outbound / Outdial",name:"Outdial Connected Total Time",desc:"Total talk time on outbound calls (excl. hold)",
+ g:{f:null},
+ c:{f:"Outdial Connected Total Time = Σ OutdialConnectedDuration\n(Conversation time excl. hold and consult)"},
+ a:{f:"Avg Outbound Agent Interaction Time =\nΣ agent interaction time for outbound\n/ outbound contact count"},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Outdial Talk Time",desc:"Pure conversation time on outbound calls (no hold)",
+ g:{f:null},
+ c:{f:"Outdial Talk Time =\nOutdialConnectedTime - OutdialHoldDuration"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Outdial Hold Count",desc:"Times outbound calls were placed on hold",
+ g:{f:null},
+ c:{f:"Outdial Hold Count = Σ OutdialHoldCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Outdial Hold Total Time",desc:"Total hold time on outbound calls",
+ g:{f:null},
+ c:{f:"Outdial Hold Total Time = Σ OutdialHoldDuration"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Average Outdial Hold Time",desc:"Mean hold duration per outbound call",
+ g:{f:null},
+ c:{f:"Avg Outdial Hold Time =\nΣ OutdialHoldDuration / Σ OutdialHoldCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Outdial Contact Total Time",desc:"Total outbound duration (talk + hold)",
+ g:{f:null},
+ c:{f:"Outdial Contact Total Time =\nΣ OutdialConnectedDuration + Σ HoldDuration"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Average Outdial Contact Time",desc:"Mean total outdial contact duration (talk + hold)",
+ g:{f:null},
+ c:{f:"Avg Outdial Contact Time =\n(Σ OutdialConnDur + Σ HoldDur)\n/ Σ OutdialConnectedCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Outdial Wrapup Count",desc:"Wrapup instances after outbound calls",
+ g:{f:null},
+ c:{f:"Outdial Wrapup Count = Σ OutdialWrapupCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Outdial Wrapup Total Time",desc:"Total ACW/wrapup time after outbound calls",
+ g:{f:null},
+ c:{f:"Outdial Wrapup Total Time = Σ OutdialWrapupDuration"},
+ a:{f:"Avg Outbound After Contact Work Time =\nΣ ACW time for outbound / outbound contact count"},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Average Outdial Wrapup Time",desc:"Mean ACW/wrapup duration per outbound call",
+ g:{f:null},
+ c:{f:"Avg Outdial Wrapup Time =\nΣ OutdialWrapupDuration / Σ OutdialWrapupCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Outdial Average Handle Time",desc:"Mean full handling duration for outbound calls",
+ g:{f:"Same AHT formula applied to all interaction types\n(not separated inbound/outbound in CCPerf docs)"},
+ c:{f:"Outdial AHT =\n(Σ OutdialConnDur + Σ OutdialWrapDur)\n/ Σ OutdialConnectedCount\nNote: HOLD NOT included"},
+ a:{f:"Avg Handle Time applies to all contacts.\nNo explicit separate outdial AHT formula\n(filter by OUTBOUND initiation method)"},
+ v:"medium"},
+
+{cat:"Outbound / Outdial",name:"Average Dials per Minute",desc:"Rate of outbound dial attempts",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Dials per Minute =\nΣ Dials / Σ Minutes\n(Campaign metric)"},
+ v:"none"},
+
+{cat:"Outbound / Outdial",name:"Outdial Average Connected Time",desc:"Mean outbound conversation duration (total including hold)",
+ g:{f:null},
+ c:{f:"Outdial Avg Connected Time =\nOutdialConnectedTime / OutdialContactHandled"},
+ a:{f:null},
+ v:"none"},
+
+// ── CONSULT / TRANSFER / CONFERENCE ────────────────────────────────────────────
+{cat:"Consult / Transfer / Conference",name:"Consult Answer Count",desc:"Consult requests received from other agents",
+ g:{f:null},
+ c:{f:"Consult Answer Count = Σ ConsultAnswerCount"},
+ a:{f:"Contacts Consulted =\nCOUNT consultation transfers"},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"Consult Answer Total Time",desc:"Total time spent answering consult requests",
+ g:{f:null},
+ c:{f:"Consult Answer Total Time = Σ ConsultAnswerDuration"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"Average Consult Answer Time",desc:"Mean duration per consult answered",
+ g:{f:null},
+ c:{f:"Avg Consult Answer Time =\nΣ ConsultDuration / Σ ConsultCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"Consult Request Count",desc:"Consult requests initiated by agent for inbound calls",
+ g:{f:null},
+ c:{f:"Consult Request Count = Σ ConsultRequestCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"Consult Request Total Time",desc:"Total time spent in consultation with other agents",
+ g:{f:null},
+ c:{f:"Consult Request Total Time = Σ ConsultRequestDuration"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"Average Consult Request Time",desc:"Mean consultation initiation duration",
+ g:{f:null},
+ c:{f:"Avg Consult Request Time =\nΣ ConsultRequestDuration / Σ ConsultRequestCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"Total Consult Time",desc:"Combined duration of all consultation activities",
+ g:{f:null},
+ c:{f:"Total Consult Time = Σ ConsultDuration\n(All consult activities combined)"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"Average Consult Time",desc:"Mean overall consultation duration",
+ g:{f:null},
+ c:{f:"Avg Consult Time =\nΣ ConsultAnswerDuration / Σ ConsultAnswerCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"Conference Count",desc:"Instances agent initiated a conference call",
+ g:{f:null},
+ c:{f:"Conference Count = Σ ConferenceCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"CTQ Request Count (Inbound)",desc:"Consult-to-Queue requests initiated during inbound calls",
+ g:{f:null},
+ c:{f:"Inbound CTQ Request Count = Σ CTQRequestCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"CTQ Answer Count (Inbound)",desc:"CTQ requests answered from inbound agents",
+ g:{f:null},
+ c:{f:"Inbound CTQ Answer Count = Σ CTQAnswerCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"CTQ Request Count (Outdial)",desc:"CTQ requests initiated during outdial calls",
+ g:{f:null},
+ c:{f:"Outdial CTQ Request Count = Σ OutdialCTQRequestCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"CTQ Answer Count (Outdial)",desc:"CTQ requests answered from outdial agents",
+ g:{f:null},
+ c:{f:"Outdial CTQ Answer Count = Σ OutdialCTQAnswerCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"Agent Transfer",desc:"Inbound contacts transferred to another agent after consult",
+ g:{f:null},
+ c:{f:"Agent Transfer = Σ AgentToAgentTransferCount"},
+ a:{f:"Contacts Transferred Out By Agent =\nCOUNT contacts transferred out by agent action"},
+ v:"low"},
+
+{cat:"Consult / Transfer / Conference",name:"Agent Requeue",desc:"Inbound calls returned to queue by agent",
+ g:{f:null},
+ c:{f:"Agent Requeue = Σ AgentTransferToQueueRequestCount"},
+ a:{f:"Contacts Transferred Out Queue =\nCOUNT contacts transferred out to queue"},
+ v:"low"},
+
+{cat:"Consult / Transfer / Conference",name:"Blind Transfer",desc:"Calls transferred to external/IVR without agent involvement",
+ g:{f:null},
+ c:{f:"Blind Transfer = Σ BlindTransferCount"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"Contacts Transferred In",desc:"Contacts received via transfer",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Contacts Transferred In =\nCOUNT transferred-in contacts\n\nContacts Transferred In From Queue =\nCOUNT transferred in from queue\n\nContacts Transferred In By Agent =\nCOUNT transferred in by agents"},
+ v:"none"},
+
+{cat:"Consult / Transfer / Conference",name:"Contacts Transferred Out",desc:"Contacts transferred out from queue/agent",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Contacts Transferred Out =\nCOUNT transferred-out contacts\n\nContacts Transferred Out External =\nCOUNT externally transferred\n\nContacts Transferred Out Internal =\nCOUNT internally transferred"},
+ v:"none"},
+
+// ── SCHEDULING & ADHERENCE ─────────────────────────────────────────────────────
+{cat:"Scheduling & Adherence",name:"Schedule Adherence %",desc:"% of scheduled time agent was in correct state",
+ g:{f:"% Adherence Per Day =\n100 - ((NC + UNC) × 100 / (ST + UNC))\n\nNC  = Noncompliant time\nUNC = Noncompliant time outside scheduled\nST  = Scheduled time"},
+ c:{f:"Not defined in Cisco Analyzer documentation."},
+ a:{f:"Adherence =\n(Time adhered to schedule\n/ Total scheduled time) × 100\n(via WFM integration)"},
+ v:"none",note:"Genesys WFM-native metric with explicit formula"},
+
+{cat:"Scheduling & Adherence",name:"Adherent Time",desc:"Total time agent adhered to their schedule",
+ g:{f:"Adherent time = ST - NC\n(Scheduled time minus noncompliant time)"},
+ c:{f:null},
+ a:{f:"Adherent Time =\nTotal time agent adhered to schedule"},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"Non-Adherent Time",desc:"Total time agent deviated from schedule",
+ g:{f:"NC + UNC (Noncompliant + Unscheduled noncompliant)"},
+ c:{f:null},
+ a:{f:"Non-Adherent Time =\nTotal time NOT adhering to schedule"},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"Interaction Volume — Forecast",desc:"Forecasted number of interactions for the period",
+ g:{f:"Forecast IV = from Master Forecast\n(Σ(ForecastIV_i) across timesteps)"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"Interaction Volume — Actual",desc:"Actual number of interactions received",
+ g:{f:"Actual IV = Σ(IV_i)\nSum of interactions across timesteps"},
+ c:{f:null},
+ a:{f:"Contact Volume = COUNT all contacts"},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"IV Forecast % Difference",desc:"Accuracy of interaction volume forecast",
+ g:{f:"IV % Diff = (Forecast IV - Actual IV) / Forecast IV\n\nIV Difference = Forecast IV - Actual IV"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"AHT — Forecast",desc:"Forecasted Average Handling Time",
+ g:{f:"AHT Forecast =\nΣ(ForecastAHT_i × ForecastIV_i)\n/ Σ(ForecastIV_i)\nWeighted by forecasted interaction volume"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"AHT Forecast % Difference",desc:"Accuracy of AHT forecast vs actual",
+ g:{f:"AHT % Diff = (Forecast AHT - Actual AHT) / Forecast AHT\nAHT Difference = Forecast AHT - Actual AHT"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"Service Level — Scheduled",desc:"SL projected from the current schedule",
+ g:{f:"SL Scheduled =\nΣ(ScheduledSL_i × ForecastIV_i) / Σ(ForecastIV_i)\nWeighted avg by forecasted IV per timestep"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"ASA — Scheduled",desc:"ASA projected from the current schedule",
+ g:{f:"ASA Scheduled =\nΣ(ScheduledASA_i × ForecastIV_i) / Σ(ForecastIV_i)\nInverse of modified Erlang staffing algorithm"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"Abandons Factor — Scheduled",desc:"Expected abandoned interactions from schedule",
+ g:{f:"Abandons Factor Scheduled =\nΣ(ScheduledAF_i × ForecastIV_i) / Σ(ForecastIV_i)\nInverse of modified Erlang staffing algorithm"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"Coverage — Scheduled (FTE)",desc:"Agents scheduled as FTEs covering work in period",
+ g:{f:"Coverage Scheduled =\nΣ(AgentsCovering × 15min) / PaidHoursPerDay\nReturns FTE equivalent"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"Coverage — Optimal",desc:"Coverage required to meet service objectives",
+ g:{f:"Derived from Erlang algorithm:\nCoverage needed to achieve target SL given\nactual interaction volume and AHT"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"Coverage — Difference",desc:"Gap between optimal and scheduled coverage",
+ g:{f:"Coverage Difference = Optimal - Scheduled"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"Number of Agents — Scheduled",desc:"Scheduled headcount for the period",
+ g:{f:"Agents Scheduled =\nSimple average across report time range"},
+ c:{f:null},
+ a:{f:"Scheduled = COUNT scheduled agents"},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"Number of Agents — Actual",desc:"Agents actually logged in during the period",
+ g:{f:"Agents Actual =\nΣ(Agents_i) / Number of timesteps"},
+ c:{f:"Unique Agents Logged In =\nCOUNT distinct agents with login activity\n(one login per unique agent per day)\n\nConcurrent Agents Logged In =\nPeak simultaneous agent logins"},
+ a:{f:"Agents Count =\nCOUNT agents logged into CCP\n\nOnline Agents =\nCOUNT agents in routable status"},
+ v:"low"},
+
+{cat:"Scheduling & Adherence",name:"Effective Staffing",desc:"Ratio of actual needed agents to scheduled agents",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Effective Staffing =\n(Actual agents needed / Scheduled agents) × 100"},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"Budget",desc:"Estimated cost for scheduled coverage in period",
+ g:{f:"Per 15-min timestep:\nBudget = (Coverage/4)\n  × (100/(100 - PlannedOverhead%))\n  × (100/(100 - UnplannedOverhead%))\n  × HourlyWage"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Scheduling & Adherence",name:"Occupancy — Scheduled",desc:"Expected occupancy from the current schedule",
+ g:{f:"Avg Occupancy Scheduled =\nΣ(ScheduledOcc_i × ForecastIV_i)\n/ Σ(ForecastIV_i)"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+// ── QUALITY & CSAT ─────────────────────────────────────────────────────────────
+{cat:"Quality & CSAT",name:"Average Auto CSAT",desc:"Mean AI-predicted customer satisfaction score",
+ g:{f:"Not in WFM docs.\nAvailable via Genesys Cloud CX\nSpeech & Text Analytics module."},
+ c:{f:"Avg Auto CSAT =\nAverage of AI-generated CSAT prediction scores"},
+ a:{f:"Available via Contact Lens.\nNot defined as formula in core Connect docs."},
+ v:"none"},
+
+{cat:"Quality & CSAT",name:"Max / Min Auto CSAT",desc:"Highest and lowest AI-predicted CSAT scores",
+ g:{f:null},
+ c:{f:"Max Auto CSAT = MAX prediction score\nMin Auto CSAT = MIN prediction score"},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Quality & CSAT",name:"Evaluations Performed",desc:"Count of quality evaluations completed",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Evaluations Performed = COUNT evaluations"},
+ v:"none"},
+
+{cat:"Quality & CSAT",name:"Average Evaluation Score",desc:"Mean quality evaluation score",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Evaluation Score =\nΣ evaluation scores / Evaluation count\n\nAvg Weighted Evaluation Score =\nWEIGHTED_AVG(evaluation scores)"},
+ v:"none"},
+
+{cat:"Quality & CSAT",name:"Automatic Fails %",desc:"% of evaluations with automatic scoring failures",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Automatic Fails % =\n(Automatic fails / Total evaluations) × 100\n\nNote: Fails cascade (question → section → form).\nCalibrations excluded."},
+ v:"none"},
+
+// ── CHAT / DIGITAL ─────────────────────────────────────────────────────────────
+{cat:"Chat / Digital",name:"Average Agent Response Time",desc:"Mean time for agent to respond to customer messages",
+ g:{f:"Not in WFM docs.\nAvailable in Genesys Cloud CX digital reporting."},
+ c:{f:"Not defined in Cisco Analyzer docs\nfor chat channel."},
+ a:{f:"Avg Agent Response Time =\nΣ TotalResponseTimeInMillis\n/ Σ NumResponses / 1000\n(ms converted to seconds)"},
+ v:"none"},
+
+{cat:"Chat / Digital",name:"Average Agent First Response Time",desc:"Mean time for agent's first reply to customer",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Agent First Response Time =\nΣ AgentFirstResponseTimeInMillis\n/ Contact count / 1000"},
+ v:"none"},
+
+{cat:"Chat / Digital",name:"Agent First Response Wait Time",desc:"Time from enqueue to agent's first response",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Contact First Response Wait Time =\nAVG(AgentFirstResponseTimestamp\n    - EnqueueTimestamp) in ms"},
+ v:"none"},
+
+{cat:"Chat / Digital",name:"Average Agent Message Length",desc:"Mean character length of agent messages",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Agent Message Length =\nΣ Agent MessageLengthInChars\n/ Σ Agent MessagesSent"},
+ v:"none"},
+
+{cat:"Chat / Digital",name:"Average Agent Messages",desc:"Mean number of messages sent by agent per contact",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Agent Messages =\nAVG(ChatMetrics.AgentMetrics.MessagesSent)"},
+ v:"none"},
+
+{cat:"Chat / Digital",name:"Average Customer Response Time",desc:"Mean customer response time in chat",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Customer Response Time =\nΣ CustomerResponseTimeInMillis\n/ Σ NumResponses / 1000"},
+ v:"none"},
+
+{cat:"Chat / Digital",name:"Average Customer Messages",desc:"Mean number of messages sent by customer per contact",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Customer Messages =\nAVG(ChatMetrics.CustomerMetrics.MessagesSent)"},
+ v:"none"},
+
+{cat:"Chat / Digital",name:"Average Customer Message Length",desc:"Mean character length of customer messages",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Customer Message Length =\nΣ Customer MessageLengthInChars\n/ Σ Customer MessagesSent"},
+ v:"none"},
+
+{cat:"Chat / Digital",name:"Conversations Abandoned",desc:"Chat conversations abandoned before agent response",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Conversations Abandoned =\nCOUNT abandoned conversations"},
+ v:"none"},
+
+{cat:"Chat / Digital",name:"Average Conversation Duration",desc:"Mean duration of a chat/digital conversation",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Conversation Duration =\nΣ ConvDuration / ConvCount\n\nAvg Conversation Close Time =\nΣ CloseTime / ConvCount"},
+ v:"none"},
+
+{cat:"Chat / Digital",name:"WFM Chat Metrics (Genesys)",desc:"Genesys WFM stat objects for chat channel",
+ g:{f:"WFM_Chat_Entered: COUNT chat interactions\nWFM_Chat_Abandoned: COUNT abandoned chats\nWFM_Chat_Average_Speed_Answer: Avg answer time\nWFM_Chat_Total_Distributed: COUNT distributed\nWFM_Chat_Handle_Time: Total handle time\nWFM_Chat_Handled: COUNT chats handled"},
+ c:{f:"Voice/Chat/Email channels tracked via\nChannel Type filter on all agent metrics.\nContacts by Channel:\nVoice = ConnCount (telephony)\nChat = ConnCount (chat)\nEmail = ConnCount (email)"},
+ a:{f:"All chat metrics tracked natively.\nChannel filtering via contact type."},
+ v:"low"},
+
+// ── CONTACT LENS CONVERSATIONAL ANALYTICS ─────────────────────────────────────
+{cat:"Contact Lens / Conversational Analytics",name:"Average Agent Talk Time",desc:"Mean agent speaking time per contact",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Agent Talk Time =\nΣ Agent talk time intervals / Contact count"},
+ v:"none"},
+
+{cat:"Contact Lens / Conversational Analytics",name:"Average Customer Talk Time",desc:"Mean customer speaking time per contact",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Customer Talk Time =\nΣ Customer talk time intervals / Contact count"},
+ v:"none"},
+
+{cat:"Contact Lens / Conversational Analytics",name:"Agent Talk Time %",desc:"Agent speaking time as % of total conversation",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Agent Talk Time % =\nΣ Agent talk intervals / Total duration × 100"},
+ v:"none"},
+
+{cat:"Contact Lens / Conversational Analytics",name:"Customer Talk Time %",desc:"Customer speaking time as % of total conversation",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Customer Talk Time % =\nΣ Customer talk intervals / Total duration × 100"},
+ v:"none"},
+
+{cat:"Contact Lens / Conversational Analytics",name:"Non-Talk Time %",desc:"Silence/hold/dead air as % of total conversation",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Non-Talk Time % =\nΣ Non-talk intervals / Total duration × 100\n\nAvg Non-Talk Time =\nΣ NonTalkIntervals / Contact count"},
+ v:"none"},
+
+{cat:"Contact Lens / Conversational Analytics",name:"Average Agent Interruptions",desc:"Mean number of times agent interrupted customer",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Agent Interruptions =\nΣ Agent interruptions / Contact count"},
+ v:"none"},
+
+{cat:"Contact Lens / Conversational Analytics",name:"Average Agent Interruption Time",desc:"Mean total duration of agent interruptions",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Agent Interruption Time =\nΣ Interruption intervals\n/ Contacts with interruptions"},
+ v:"none"},
+
+{cat:"Contact Lens / Conversational Analytics",name:"Average Agent Greeting Time",desc:"Mean time from contact start to agent first response",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Agent Greeting Time =\nΣ Agent first response time / Contact count"},
+ v:"none"},
+
+// ── AI / BOT (Amazon Connect) ──────────────────────────────────────────────────
+{cat:"AI & Bot (Amazon Connect)",name:"AI Handoff Rate",desc:"% of AI-handled contacts escalated to human agents",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"AI Handoff Rate =\n(AI handoffs / AI involved contacts) × 100\n\nAI Involved Contacts =\nCOUNT records where contactId + sessionId present"},
+ v:"none"},
+
+{cat:"AI & Bot (Amazon Connect)",name:"AI Agent Invocation Success Rate",desc:"% of AI agent invocations that succeeded",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"AI Agent Invocation Success Rate =\n(AI agent invocation success\n/ AI agent invocations) × 100\n\nInvocation Success = COUNT where invocationSuccess=true"},
+ v:"none"},
+
+{cat:"AI & Bot (Amazon Connect)",name:"AI Prompt Invocation Success Rate",desc:"% of AI prompt invocations that succeeded",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"AI Prompt Invocation Success Rate =\n(AI prompt invocation success\n/ AI prompt invocations) × 100"},
+ v:"none"},
+
+{cat:"AI & Bot (Amazon Connect)",name:"AI Tool Invocation Success Rate",desc:"% of AI tool invocations that succeeded",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"AI Tool Invocation Success Rate =\n(AI tool invocation success\n/ AI tool invocations) × 100"},
+ v:"none"},
+
+{cat:"AI & Bot (Amazon Connect)",name:"AI Response Completion Rate",desc:"% of AI session responses completed successfully",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"AI Response Completion Rate =\n(Weighted sum of AI completed responses\n/ AI session invocation sum) × 100"},
+ v:"none"},
+
+{cat:"AI & Bot (Amazon Connect)",name:"Average AI / Bot Conversation Turns",desc:"Mean number of turns in AI/bot conversations",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg AI Agent Conv Turns =\nAVG(conversationTurnsInResponse)\n\nAvg AI Conv Turns (session) =\nAVG(avgConversationTurnsInResponse)\n\nAvg Bot Conv Turns =\nΣ ConvTurns / ConvCount"},
+ v:"none"},
+
+{cat:"AI & Bot (Amazon Connect)",name:"Average Bot Conversation Time",desc:"Mean duration of bot-handled conversations",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Bot Conv Time =\nΣ (Conv End - Conv Start) / Conv count"},
+ v:"none"},
+
+{cat:"AI & Bot (Amazon Connect)",name:"Average Bot Messages",desc:"Mean number of messages in bot conversations",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Bot Messages =\nAVG(ChatMetrics.ContactMetrics.TotalBotMessages)"},
+ v:"none"},
+
+{cat:"AI & Bot (Amazon Connect)",name:"Proactive Intent Engagement Rate",desc:"% of detected proactive intents that were engaged",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Proactive Intent Engagement Rate =\n(Proactive intents engaged\n/ Proactive intents detected) × 100"},
+ v:"none"},
+
+{cat:"AI & Bot (Amazon Connect)",name:"Proactive Intent Response Rate",desc:"% of engaged proactive intents that were answered",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Proactive Intent Response Rate =\n(Proactive intents answered\n/ Proactive intents engaged) × 100"},
+ v:"none"},
+
+{cat:"AI & Bot (Amazon Connect)",name:"Average AI Prompt/Tool Invocation Latency",desc:"Mean response latency for AI prompt and tool invocations",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg AI Prompt Invocation Latency =\nAVG(invocationLatency) in ms\n\nAvg AI Tool Invocation Latency =\nAVG(invocationLatency) in ms"},
+ v:"none"},
+
+{cat:"AI & Bot (Amazon Connect)",name:"Knowledge Content References",desc:"Count of knowledge base articles referenced by AI",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Knowledge Content References =\nCOUNT records where knowledgeBaseId present"},
+ v:"none"},
+
+// ── CASE MANAGEMENT ────────────────────────────────────────────────────────────
+{cat:"Case Management (Amazon Connect)",name:"Cases Created / Resolved / Reopened",desc:"Case lifecycle counts",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Cases Created = COUNT case records created\nCases Resolved = COUNT cases marked resolved\nCases Reopened = COUNT cases reopened\nCurrent Cases = COUNT open cases\nCases Resolved on First Contact = COUNT"},
+ v:"none"},
+
+{cat:"Case Management (Amazon Connect)",name:"Average Case Resolution Time",desc:"Mean time from case creation to resolution",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Case Resolution Time =\nΣ (ResolutionTimestamp - CreationTimestamp)\n/ Cases resolved"},
+ v:"none"},
+
+{cat:"Case Management (Amazon Connect)",name:"Average Contacts per Case",desc:"Mean number of contacts associated per case",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Contacts per Case =\nΣ contact count per case / Case count"},
+ v:"none"},
+
+// ── OUTBOUND CAMPAIGNS ─────────────────────────────────────────────────────────
+{cat:"Outbound Campaigns (Amazon Connect)",name:"Campaign Progress Rate",desc:"% of campaign interactions completed",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Campaign Progress Rate =\n(Completed interactions / Total interactions) × 100"},
+ v:"none"},
+
+{cat:"Outbound Campaigns (Amazon Connect)",name:"Campaign Contacts Abandoned After X Rate",desc:"% of campaign contacts abandoned after X seconds",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Campaign Contacts Abandoned After X Rate =\n(Contacts abandoned after X sec\n/ Total campaign contacts) × 100"},
+ v:"none"},
+
+{cat:"Outbound Campaigns (Amazon Connect)",name:"Callback Contacts Handled",desc:"Callback contacts successfully handled",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Callback Contacts Handled =\nCOUNT handled callback contacts\n\nCallback Attempts = COUNT attempt records\nCallback Contacts = COUNT callback contacts"},
+ v:"none"},
+
+{cat:"Outbound Campaigns (Amazon Connect)",name:"Delivery Attempt Disposition Rate",desc:"% of delivery attempts that were successful",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Delivery Attempt Disposition Rate =\n(Successful deliveries\n/ Total delivery attempts) × 100"},
+ v:"none"},
+
+// ── FLOW / IVR ─────────────────────────────────────────────────────────────────
+{cat:"Flow & IVR (Amazon Connect)",name:"Average Flow Time",desc:"Mean duration of contact flow / IVR execution",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Flow Time =\nΣ FlowDuration / FlowCount\n\nMin Flow Time = MIN(FlowDuration)\nMax Flow Time = MAX(FlowDuration)"},
+ v:"none"},
+
+{cat:"Flow & IVR (Amazon Connect)",name:"Flows Outcome %",desc:"% of flows with a specific outcome",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Flows Outcome % =\n(Specific outcome count / Total flows) × 100\n\nFlows Started = COUNT initiated flows"},
+ v:"none"},
+
+{cat:"Flow & IVR (Amazon Connect)",name:"Contact Flow Time",desc:"Total time contacts spent in flows/IVR",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Contact Flow Time =\nΣ flow execution duration"},
+ v:"none"},
+
+// ── MISC VOLUME & QUEUE ────────────────────────────────────────────────────────
+{cat:"Volume & Queue Counts",name:"Contacts Queued",desc:"Contacts added to any queue",
+ g:{f:"Σ CallsDistributed_i + Σ AbandonedCalls_i\n(Total offered to queues)"},
+ c:{f:"Tracked via Queue reports (Queue Abandoned,\nQueued Contact Volume).\nNot a standalone formula in Agent reports."},
+ a:{f:"Contacts Queued =\nCOUNT contacts added to queue\n\nContacts Queued (enqueue timestamp) =\nCOUNT contacts by enqueue timestamp"},
+ v:"none"},
+
+{cat:"Volume & Queue Counts",name:"Contacts Abandoned in X Seconds",desc:"Contacts abandoned within a specified time threshold",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Contacts Abandoned in X Seconds =\nCOUNT contacts abandoned within X seconds\nof being queued"},
+ v:"none"},
+
+{cat:"Volume & Queue Counts",name:"Contacts Answered in X Seconds",desc:"Contacts answered within a specified time threshold",
+ g:{f:"Answered in threshold is the basis of SL numerator\n(see Service Level formula)"},
+ c:{f:"Contacts answered within threshold forms\nthe numerator of the Service Level calculation"},
+ a:{f:"Contacts Answered in X Seconds =\nCOUNT contacts answered within X seconds\n(Used as SL numerator)"},
+ v:"none"},
+
+{cat:"Volume & Queue Counts",name:"Contacts Removed from Queue in X Seconds",desc:"Contacts that left the queue within X seconds",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Contacts Removed from Queue in X Seconds =\nCOUNT contacts removed within X seconds"},
+ v:"none"},
+
+{cat:"Volume & Queue Counts",name:"Contacts Resolved in X Seconds",desc:"Contacts fully resolved within X seconds",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Contacts Resolved in X Seconds =\nCOUNT contacts resolved within X seconds"},
+ v:"none"},
+
+{cat:"Volume & Queue Counts",name:"Average Contact Duration",desc:"Mean total contact duration from initiation to disconnect",
+ g:{f:null},
+ c:{f:"Call Duration = Time end - Time start\n(Dropped Call Summaries report)"},
+ a:{f:"Avg Contact Duration =\nΣ (DisconnectTimestamp - InitiationTimestamp)\n/ Contact count"},
+ v:"low"},
+
+{cat:"Volume & Queue Counts",name:"Maximum / Oldest Queue Time",desc:"Longest wait time currently in queue",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Maximum Queued Time =\nMAX(queue duration)\n\nOldest =\nDuration since oldest contact entered queue\n(Real-time metric)"},
+ v:"none"},
+
+{cat:"Volume & Queue Counts",name:"Average Queue Abandon Time",desc:"Mean time contacts waited before abandoning",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Avg Queue Abandon Time =\nΣ queue abandon duration / Abandoned count\n\nAlso tracked for customer-first callback variant"},
+ v:"none"},
+
+{cat:"Volume & Queue Counts",name:"Contacts Hold Disconnect",desc:"Contacts where customer or agent disconnected during hold",
+ g:{f:null},
+ c:{f:null},
+ a:{f:"Contacts Hold Disconnect =\nCOUNT all hold disconnects\n\nContacts Hold Agent Disconnect =\nCOUNT agent disconnected during hold\n\nContacts Hold Customer Disconnect =\nCOUNT customer disconnected during hold"},
+ v:"none"},
+
+// ── GENESYS WFM CHANNEL STATS ──────────────────────────────────────────────────
+{cat:"Genesys WFM Channel Statistics",name:"Voice Channel Statistics",desc:"Genesys WFM stat objects for voice interactions",
+ g:{f:"WFMTotalNumberCallsEntered: COUNT received\nWFMTotalNumberCallsAband: COUNT abandoned\nWFMTotalNumberCallsDistrib: COUNT distributed\nWFMServiceFactor1: Service level value\nWFMAverTimeBeforeAnswering: Avg wait time\nWFMTotalHandleTime: Total handle time\nWFMTotalNumberCallsHandled: COUNT handled"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Genesys WFM Channel Statistics",name:"Email Channel Statistics",desc:"Genesys WFM stat objects for email interactions",
+ g:{f:"WFM_Email_Entered: COUNT interactions (StagingArea)\nWFM_Email_Handle_Time: Total handle time\n  (Agent, GroupAgents, GroupPlaces, Place)\nWFM_Email_Handled: COUNT handled"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+
+{cat:"Genesys WFM Channel Statistics",name:"iWD Channel Statistics",desc:"Genesys WFM stat objects for intelligent workload distribution",
+ g:{f:"WFM_iWD_Entered: COUNT iWD interactions\nWFM_iWD_Abandoned: COUNT abandoned\nWFM_iWD_Average_Speed_Answer: Avg answer time\nWFM_iWD_Total_Distributed: COUNT distributed\nWFM_iWD_Handle_Time: Total handle time\nWFM_iWD_Handled: COUNT handled"},
+ c:{f:null},
+ a:{f:null},
+ v:"none"},
+];
+
+// ══════════════════════════════════════════════════════
+// BUILD CATEGORY SELECT & TABLE
+// ══════════════════════════════════════════════════════
+const cats = [...new Set(METRICS.map(m=>m.cat))];
+const sel = document.getElementById('cat');
+cats.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.text=c; sel.appendChild(o); });
+
+function cell(obj, tgClass){
+  if(!obj || !obj.f) return '<span class="blank">Not defined in documentation</span>';
+  return `<div class="${tgClass}">▸</div><div class="fm">${esc(obj.f)}</div>${obj.n?`<div class="fn">${esc(obj.n)}</div>`:''}`;
+}
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function vbadge(v){
+  if(v==='high')   return '<span class="vb v-h">High</span>';
+  if(v==='medium') return '<span class="vb v-m">Med</span>';
+  if(v==='low')    return '<span class="vb v-l">Low</span>';
+  return '<span class="vb v-n">—</span>';
+}
+
+function avail(m){
+  let p=[];
+  if(m.g && m.g.f) p.push('<span class="pill pill-g">G</span>');
+  if(m.c && m.c.f) p.push('<span class="pill pill-c">C</span>');
+  if(m.a && m.a.f) p.push('<span class="pill pill-a">A</span>');
+  return p.join('');
+}
+
+function buildRows(list){
+  let html=''; let lastCat='';
+  list.forEach(m=>{
+    if(m.cat!==lastCat){
+      html+=`<tr class="sec-hdr"><td colspan="5">${m.cat}</td></tr>`;
+      lastCat=m.cat;
+    }
+    html+=`<tr class="data-row" data-cat="${m.cat}" data-var="${m.v||'none'}">
+      <td><div class="mn">${m.name}</div><div class="md">${m.desc||''}</div><div class="pills">${avail(m)}</div></td>
+      <td><div class="tg tg-g">Genesys WFM</div>${cell(m.g,'tg-g')}</td>
+      <td><div class="tg tg-c">Cisco Webex CC</div>${cell(m.c,'tg-c')}</td>
+      <td><div class="tg tg-a">Amazon Connect</div>${cell(m.a,'tg-a')}</td>
+      <td class="vc">${vbadge(m.v)}${m.note?`<div style="font-size:10px;color:var(--mt);margin-top:5px;">${m.note}</div>`:''}</td>
+    </tr>`;
+  });
+  return html;
+}
+
+function filter(){
+  const q=document.getElementById('srch').value.toLowerCase();
+  const c=document.getElementById('cat').value;
+  const p=document.getElementById('plat').value;
+  const v=document.getElementById('var').value;
+  let list=METRICS.filter(m=>{
+    if(c && m.cat!==c) return false;
+    if(v && (m.v||'none')!==v) return false;
+    if(p){
+      const hasG=m.g&&m.g.f, hasC=m.c&&m.c.f, hasA=m.a&&m.a.f;
+      if(p==='G' && (!hasG||hasC||hasA)) return false;
+      if(p==='C' && (!hasC||hasG||hasA)) return false;
+      if(p==='A' && (!hasA||hasG||hasC)) return false;
+    }
+    if(q){
+      const hay=(m.name+' '+m.desc+' '+(m.g&&m.g.f||'')+' '+(m.c&&m.c.f||'')+' '+(m.a&&m.a.f||'')).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  document.getElementById('tbody').innerHTML = buildRows(list);
+  document.getElementById('cnt').textContent = list.length + ' metrics';
+}
+
+filter();
+
+// ══════════════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════════════
+function sw(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    const ns=['chart','diff','sim'];
+    t.classList.toggle('on', ns[i]===name);
+  });
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.getElementById('pane-'+name).classList.add('on');
+}
+
+// ══════════════════════════════════════════════════════
+// SIMULATION
+// ══════════════════════════════════════════════════════
+const PRE={
+  s:{i_q:200,i_a:185,i_ab:15,i_sl:166,i_tk:37000,i_hd:7400,i_aw:9250,i_qt:5550,i_lt:14400,i_at:12500},
+  m:{i_q:500,i_a:460,i_ab:40,i_sl:414,i_tk:138000,i_hd:27600,i_aw:23000,i_qt:27600,i_lt:57600,i_at:50000},
+  e:{i_q:5000,i_a:4700,i_ab:300,i_sl:4230,i_tk:1410000,i_hd:282000,i_aw:235000,i_qt:235000,i_lt:576000,i_at:500000},
+  h:{i_q:500,i_a:380,i_ab:120,i_sl:304,i_tk:76000,i_hd:22800,i_aw:15200,i_qt:38000,i_lt:57600,i_at:42000},
+};
+function lp(k){ Object.keys(PRE[k]).forEach(id=>{document.getElementById(id).value=PRE[k][id];}); }
+function gv(id){ return parseFloat(document.getElementById(id).value)||0; }
+function ts(v,u){
+  if(v===null||isNaN(v)) return '<span style="color:var(--mt)">—</span>';
+  if(u==='%') return v.toFixed(2)+'%';
+  if(u==='s'){ const m=Math.floor(v/60),s=Math.round(v%60); return m>0?`${m}m ${s}s`:`${s}s`; }
+  return v.toFixed(2);
+}
+function vspan(vals){
+  const ns=vals.filter(x=>x!==null&&!isNaN(x));
+  if(ns.length<2) return '<span style="color:var(--mt)">—</span>';
+  const range=Math.max(...ns)-Math.min(...ns), avg=ns.reduce((a,b)=>a+b,0)/ns.length;
+  const p=avg!==0?(range/avg)*100:0;
+  const cls=p<5?'vv-lo':p<20?'vv-md':'vv-hi';
+  return `<span class="vv ${cls}">±${p.toFixed(1)}%</span>`;
+}
+function runSim(){
+  const q=gv('i_q'),a=gv('i_a'),ab=gv('i_ab'),sl=gv('i_sl');
+  const tk=gv('i_tk'),hd=gv('i_hd'),aw=gv('i_aw'),qt=gv('i_qt');
+  const lt=gv('i_lt'),at=gv('i_at');
+  const handle=tk+hd+aw;
+
+  const rows=[
+    {name:'Average Handle Time (AHT)',unit:'s',
+     g: a>0?(tk+hd+aw)/a:null,
+     c: a>0?(tk+aw)/a:null,
+     a: a>0?(tk+hd+aw)/a:null,
+     fg:'(Talk+Hold+ACW)/Answered',fc:'(Talk+ACW)/Answered',fa:'(Talk+Hold+ACW)/Answered'},
+    {name:'Average Speed of Answer (ASA)',unit:'s',
+     g:a>0?qt/a:null, c:a>0?qt/a:null, a:a>0?qt/a:null,
+     fg:'Queue Wait/Answered (wtd)',fc:'RingingDur/RingingCount',fa:'Avg(Enqueue→Answer)'},
+    {name:'Service Level',unit:'%',
+     g:a>0?(sl/a)*100:null,
+     c:q>0?(sl/q)*100:null,
+     a:q>0?(sl/q)*100:null,
+     fg:'AnsInSL/Answered×100',fc:'AnsInSL/Queued×100',fa:'AnsInSL/Queued×100'},
+    {name:'Abandonment Rate',unit:'%',
+     g:a>0?(ab/a)*100:null,
+     c:q>0?(ab/q)*100:null,
+     a:q>0?(ab/q)*100:null,
+     fg:'Abandoned/Answered×100',fc:'Abandoned/Queued×100',fa:'Abandoned/Queued×100'},
+    {name:'Occupancy',unit:'%',
+     g:at>0?(handle/at)*100:null,
+     c:lt>0?(handle/lt)*100:null,
+     a:at>0?(handle/at)*100:null,
+     fg:'Handle/AvailTime×100 (IV-wtd)',fc:'Handle/LoginTime×100',fa:'Handle/AvailTime×100'},
+    {name:'Avg Talk Time',unit:'s',
+     g:a>0?tk/a:null, c:a>0?tk/a:null, a:a>0?tk/a:null,
+     fg:'Talk/Answered',fc:'AVG(ConnectedDuration)',fa:'Σ AgentInteractionDur/Contacts'},
+    {name:'Avg Hold Time',unit:'s',
+     g:a>0?hd/a:null, c:a>0?hd/a:null, a:a>0?hd/a:null,
+     fg:'(in AHT, not standalone)',fc:'HoldDur/HoldCount',fa:'CustomerHoldDur/Contacts'},
+    {name:'Avg ACW / Wrapup Time',unit:'s',
+     g:a>0?aw/a:null, c:a>0?aw/a:null, a:a>0?aw/a:null,
+     fg:'(in AHT, not standalone)',fc:'WrapDur/WrapCount',fa:'Σ ACWDur/Contacts'},
+  ];
+
+  const aht_g=rows[0].g, aht_c=rows[0].c;
+  const sl_g=rows[2].g,  sl_a=rows[2].a;
+  const occ_c=rows[4].c, occ_a=rows[4].a;
+  const ab_g=rows[3].g,  ab_a=rows[3].a;
+
+  let html=`<div class="rc">
+    <div class="rch"><h3>Simulation Results</h3>
+    <span style="font-size:11px;color:var(--mt)">${q} queued &nbsp;|&nbsp; ${a} answered &nbsp;|&nbsp; ${ab} abandoned (${q>0?((ab/q)*100).toFixed(1):0}%)</span></div>
+    <div class="rr hrow">
+      <div class="rc2">Metric</div>
+      <div class="rc2" style="color:var(--g)">Genesys WFM</div>
+      <div class="rc2" style="color:var(--c)">Cisco Webex CC</div>
+      <div class="rc2" style="color:var(--a)">Amazon Connect</div>
+      <div class="rc2">Variance</div>
+    </div>`;
+
+  rows.forEach(r=>{
+    html+=`<div class="rr">
+      <div class="rc2"><strong>${r.name}</strong></div>
+      <div class="rc2"><div class="rv rv-g">${ts(r.g,r.unit)}</div><div style="font-size:10px;color:var(--mt);margin-top:3px;font-family:monospace">${r.fg}</div></div>
+      <div class="rc2"><div class="rv rv-c">${ts(r.c,r.unit)}</div><div style="font-size:10px;color:var(--mt);margin-top:3px;font-family:monospace">${r.fc}</div></div>
+      <div class="rc2"><div class="rv rv-a">${ts(r.a,r.unit)}</div><div style="font-size:10px;color:var(--mt);margin-top:3px;font-family:monospace">${r.fa}</div></div>
+      <div class="rc2" style="text-align:center">${vspan([r.g,r.c,r.a])}</div>
+    </div>`;
+  });
+  html+='</div>';
+
+  html+=`<div class="rc"><div class="rch"><h3>Variance Summary</h3></div>
+    <div class="sm">
+      <div><div class="sv">AHT Gap (Cisco vs Others)</div>
+        <div class="sn" style="color:${aht_g&&aht_c&&(aht_g-aht_c)>30?'var(--rd)':(aht_g&&aht_c&&(aht_g-aht_c)>10?'var(--yw)':'var(--gr)')}">${aht_g&&aht_c?ts(aht_g-aht_c,'s'):'—'}</div>
+        <div class="sd">Cisco lower — hold excluded from AHT</div></div>
+      <div><div class="sv">Service Level Gap (pp)</div>
+        <div class="sn" style="color:${sl_g&&sl_a&&Math.abs(sl_g-sl_a)>10?'var(--rd)':(sl_g&&sl_a&&Math.abs(sl_g-sl_a)>3?'var(--yw)':'var(--gr)')}">${sl_g&&sl_a?Math.abs(sl_g-sl_a).toFixed(1)+' pp':'—'}</div>
+        <div class="sd">Genesys higher — answered vs queued denom.</div></div>
+      <div><div class="sv">Occupancy Gap (pp)</div>
+        <div class="sn" style="color:${occ_c&&occ_a&&Math.abs(occ_a-occ_c)>10?'var(--rd)':(occ_c&&occ_a&&Math.abs(occ_a-occ_c)>3?'var(--yw)':'var(--gr)')}">${occ_c&&occ_a?Math.abs(occ_a-occ_c).toFixed(1)+' pp':'—'}</div>
+        <div class="sd">Amazon higher — available vs login time denom.</div></div>
+      <div><div class="sv">Abandon Rate Gap (pp)</div>
+        <div class="sn" style="color:${ab_g&&ab_a&&Math.abs(ab_g-ab_a)>3?'var(--rd)':(ab_g&&ab_a&&Math.abs(ab_g-ab_a)>1?'var(--yw)':'var(--gr)')}">${ab_g&&ab_a?Math.abs(ab_g-ab_a).toFixed(1)+' pp':'—'}</div>
+        <div class="sd">Genesys uses answered denom.; others use queued</div></div>
+    </div></div>`;
+
+  html+=`<div class="nb"><strong>Note:</strong> Genesys values shown use simple averages as proxies. Production Genesys WFM uses 15-minute timestep weighted averages — actual values will differ depending on intraday volume distribution. Occupancy for Genesys uses available time as a proxy for the IV-weighted formula.</div>`;
+
+  document.getElementById('res').innerHTML=html;
+}
+window.addEventListener('DOMContentLoaded',()=>runSim());
+</script>
+</body>
+</html>
