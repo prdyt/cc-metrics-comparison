@@ -253,12 +253,6 @@ tr.sec-hdr td{background:var(--s2);color:var(--mt);font-size:11px;font-weight:70
 const METRICS = [
 // ── CORE KPIs ─────────────────────────────────────────────────────────────────
 {cat:"Core KPIs",name:"Average Handle Time (AHT)",desc:"Mean time to fully process a contact (talk + hold + ACW)",
-  std:"(Talk Time + Hold Time + After-Call Work Time)
-/ Contacts Handled
-
-All three components per ICMI/COPC standard.
-Benchmark: 4-6 min voice, 8-12 min email.
-Ring time is excluded.",
   std:"(Talk Time + Hold Time + After-Call Work Time)\n/ Contacts Handled\n\nAll three components included per ICMI/COPC standard.\nTypical benchmarks: 4–6 min voice, 8–12 min email.\nDoes not include ring/ringing time.",
  g:{f:"Σ(AHT_i × CallsHandled_i) / Σ(CallsHandled_i)\nWeighted avg per 15-min timestep, weighted by calls handled"},
  c:{f:"Agent Details/Site:\n(Σ ConnDur + Σ WrapDur) / Σ ConnCount\n— hold excluded\n\nAgent Statistics report:\n(Hold + Connected + Wrapup) / Handled\n— hold included"},
@@ -267,12 +261,7 @@ Ring time is excluded.",
  v:"high",note:"Cisco AHT (Agent Details) excludes hold; Genesys & Amazon include it"},
 
 {cat:"Core KPIs",name:"Average Speed of Answer (ASA)",desc:"Mean wait time from queue entry to agent answer",
-  std:"Total Queue Wait Time (answered contacts only)
-/ Contacts Answered
-
-Abandoned contacts excluded. Source: ICMI.
-Common benchmark: 20-30 sec for voice.
-Also called Average Queue Answer Time.",
+  std:"Total Queue Wait Time (answered contacts only)\n/ Contacts Answered\n\nAbandoned contacts excluded. Source: ICMI.\nCommon benchmark: 20-30 sec for voice.\nAlso called Average Queue Answer Time.",
   g:{f:"Σ(ASA_i × CallsDistributed_i)\n/ Σ(CallsDistributed_i)\nWeighted avg per timestep by calls distributed"},
  c:{f:"Inbound Reserved Total Time / Reserved Count\n= Σ RingingDuration / Σ RingingCount\n(Simple average)"},
  a:{f:"Avg Queue Answer Time =\navg(AnswerTimestamp - EnqueueTimestamp)\nper answered contact"},
@@ -280,12 +269,7 @@ Also called Average Queue Answer Time.",
  v:"medium",note:"Genesys weights by interval volume; others use simple average"},
 
 {cat:"Core KPIs",name:"Service Level",desc:"% contacts answered within threshold (X seconds)",
-  std:"(Contacts Answered within X seconds
-/ Total Contacts Offered) x 100
-
-Industry standard denominator = total offered (incl. abandoned).
-ICMI/COPC benchmark: 80% in 20 sec.
-Denominator methodology is the most debated in the industry.",
+  std:"(Contacts Answered within X seconds\n/ Total Contacts Offered) x 100\n\nIndustry standard denominator = total offered (incl. abandoned).\nICMI/COPC benchmark: 80% in 20 sec.\nDenominator methodology is the most debated in the industry.",
   g:{f:"Actual SL =\nΣ(SL_i × CallsDistributed_i)\n/ Σ(CallsDistributed_i)\nDenominator = calls distributed (answered only)"},
  c:{f:"(Contacts answered ≤ threshold\n/ (Contacts arrived - Short calls)) × 100\nDenominator excludes abandoned & short calls"},
  a:{f:"(Contacts answered in X seconds\n/ Contacts queued) × 100\nDenominator = ALL contacts queued (incl. abandoned)"},
@@ -293,22 +277,14 @@ Denominator methodology is the most debated in the industry.",
  v:"high",note:"Genesys: denominator = answered; Amazon: denominator = all queued; Cisco: excludes short calls"},
 
 {cat:"Core KPIs",name:"Occupancy",desc:"% time agents spent in active work vs. available time",
-  std:"Handle Time / (Handle Time + Idle/Available Time) x 100
-
-Denominator = active + available time only (not login time).
-Source: ICMI. Target: 85-90% for voice.
-Does NOT include non-productive/break time in denominator.",
+  std:"Handle Time / (Handle Time + Idle/Available Time) x 100\n\nDenominator = active + available time only (not login time).\nSource: ICMI. Target: 85-90% for voice.\nDoes NOT include non-productive/break time in denominator.",
   g:{f:"Avg Occupancy Scheduled =\nΣ(Occ_i × ForecastIV_i) / Σ(ForecastIV_i)\nWeighted by forecasted interaction volume per timestep"},
  c:{f:"((Σ ConnDur + Σ WrapDur)\n + (Σ OutdialConnDur + Σ OutdialWrapDur))\n/ (Max LogoutTimestamp - Min LoginTimestamp)\nDenominator = total login/shift time"},
  a:{f:"(Contact handling time / Available time) × 100\n\n% Agent On Contact Time =\n(Time on contact / Available time) × 100\nDenominator = available time only"},
  v:"high",note:"Three different denominators: Forecast IV (Genesys), login time (Cisco), available time (Amazon)"},
 
 {cat:"Core KPIs",name:"Abandonment Rate",desc:"% contacts abandoned before reaching an agent",
-  std:"(Contacts Abandoned / Total Contacts Offered) x 100
-
-Source: ICMI. Denominator = all contacts offered.
-Typical target: <5% for voice. Excludes contacts that
-abandon within a short grace threshold (usually <5 sec).",
+  std:"(Contacts Abandoned / Total Contacts Offered) x 100\n\nSource: ICMI. Denominator = all contacts offered.\nTypical target: <5% for voice. Excludes contacts that\nabandon within a short grace threshold (usually <5 sec).",
   g:{f:"Abandons Factor (Actual) =\nΣ(Abandons_i × CallsDistributed_i)\n/ Σ(CallsDistributed_i)\nWeighted by calls distributed per timestep"},
  c:{f:"Not explicitly defined as a standalone % formula\nin Analyzer documentation.\nTypically tracked via abandoned contact counts."},
  a:{f:"(Contacts abandoned / Contacts queued) × 100\nDefinition: customer disconnected while waiting\nin queue before connecting to agent"},
@@ -316,11 +292,7 @@ abandon within a short grace threshold (usually <5 sec).",
  v:"medium",note:"Genesys uses answered-calls denominator and timestep weighting; Amazon uses flat queued count"},
 
 {cat:"Core KPIs",name:"Contacts Handled",desc:"Total number of contacts successfully handled",
-  std:"COUNT of contacts where an agent was connected
-and the interaction was completed.
-
-Includes inbound + outbound. Does not count contacts
-abandoned before agent connection.",
+  std:"COUNT of contacts where an agent was connected\nand the interaction was completed.\n\nIncludes inbound + outbound. Does not count contacts\nabandoned before agent connection.",
   g:{f:"Actual Interaction Volume = Σ(IV_i)\nSum of interactions received/handled across timesteps"},
  c:{f:"Contact Handled =\nΣ OutdialConnectedCount + Σ ConnectedCount\n(Inbound + Outbound combined)"},
  a:{f:"COUNT contacts where agent was connected.\n\nContacts Handled (connected to agent) =\nCOUNT contacts with ConnectedToAgentTimestamp"},
@@ -328,140 +300,98 @@ abandoned before agent connection.",
 
 // ── AGENT STATE & ACTIVITY ─────────────────────────────────────────────────────
 {cat:"Agent State & Activity",name:"Staff Hours / Login Duration",desc:"Total time agents were logged into the system",
-  std:"Total elapsed time agents were logged into the system.
-
-Measured as: Logout Timestamp - Login Timestamp.
-Used to calculate agent utilization and payroll hours.",
+  std:"Total elapsed time agents were logged into the system.\n\nMeasured as: Logout Timestamp - Login Timestamp.\nUsed to calculate agent utilization and payroll hours.",
   g:{f:"Coverage – Scheduled:\nΣ AgentsCovering × 15min / PaidHoursPerDay\nFTE-based measure, not raw login time"},
  c:{f:"Staff Hours =\nΣ RealtimeUpdateTimestamp - Σ LoginTimestamp\nRaw elapsed login duration per agent"},
  a:{f:"Agent Contact Time = contactTime / 1000\nOnline Time = Σ agent online duration\n(Separate from idle/non-productive)"},
  v:"medium",note:"Genesys uses FTE model; Cisco/Amazon use raw elapsed time"},
 
 {cat:"Agent State & Activity",name:"Idle Count",desc:"Number of times agent transitioned to idle state",
-  std:"COUNT of transitions into the idle/available-but-not-handling state.
-
-Each time an agent completes a contact and enters
-available/idle state, the count increments by 1.",
+  std:"COUNT of transitions into the idle/available-but-not-handling state.\n\nEach time an agent completes a contact and enters\navailable/idle state, the count increments by 1.",
   g:{f:null},
  c:{f:"Idle Count = Σ IdleCount\n(Count of transitions into Idle state)"},
  a:{f:"Agent Non-Productive =\nCOUNT agents in custom status\n(Real-time state metric)"},
  v:"none"},
 
 {cat:"Agent State & Activity",name:"Total Idle Time",desc:"Cumulative time agent spent in idle/available state",
-  std:"SUM of all time spent in idle/available state (not on a contact).
-
-Complement of handle time. High idle time may
-indicate overstaffing or low contact volume.",
+  std:"SUM of all time spent in idle/available state (not on a contact).\n\nComplement of handle time. High idle time may\nindicate overstaffing or low contact volume.",
   g:{f:"Not a standalone metric in WFM.\nTracked as adherence deviation from scheduled\navailable state."},
  c:{f:"Total Idle Time = Σ IdleDuration\n(Cumulative duration in Idle state)"},
  a:{f:"Agent Idle Time = idleTime / 1000\n(Converts ms to seconds)\n\n% Agent Idle Time =\n(Idle time / Available time) × 100"},
  v:"low"},
 
 {cat:"Agent State & Activity",name:"Average Idle Time",desc:"Mean duration per idle period",
-  std:"Total Idle Time / Idle Count
-
-Mean duration per idle period. Used to assess
-rhythm of contact flow and staffing efficiency.",
+  std:"Total Idle Time / Idle Count\n\nMean duration per idle period. Used to assess\nrhythm of contact flow and staffing efficiency.",
   g:{f:null},
  c:{f:"Avg Idle Time =\nΣ IdleDuration / Σ IdleCount"},
  a:{f:"% Agent Idle Time =\n(Idle time / Available time) × 100\n(Rate, not avg duration)"},
  v:"none"},
 
 {cat:"Agent State & Activity",name:"Available Count",desc:"Number of times agent entered Available state",
-  std:"COUNT of transitions into the Available state
-(ready to receive contacts).
-
-Different from Idle Count if system distinguishes
-between Available and Idle as separate states.",
+  std:"COUNT of transitions into the Available state\n(ready to receive contacts).\n\nDifferent from Idle Count if system distinguishes\nbetween Available and Idle as separate states.",
   g:{f:null},
  c:{f:"Available Count = Σ AvailableCount\n(Transitions into Available state)"},
  a:{f:"Available =\nCOUNT agents who can take inbound contacts\n(Real-time count metric)"},
  v:"none"},
 
 {cat:"Agent State & Activity",name:"Total Available Time",desc:"Cumulative time agent spent in Available state",
-  std:"SUM of all time agent spent in Available state.
-
-Used as the denominator in Occupancy calculations
-per ICMI standard.",
+  std:"SUM of all time agent spent in Available state.\n\nUsed as the denominator in Occupancy calculations\nper ICMI standard.",
   g:{f:null},
  c:{f:"Total Available Time = Σ AvailableDuration"},
  a:{f:"Included in Available time denominator\nfor % On Contact and % Idle calculations"},
  v:"none"},
 
 {cat:"Agent State & Activity",name:"Average Available Time",desc:"Mean duration per Available state period",
-  std:"Total Available Time / Available Count
-
-Mean duration per available state period.",
+  std:"Total Available Time / Available Count\n\nMean duration per available state period.",
   g:{f:null},
  c:{f:"Avg Available Time =\nΣ AvailableDuration / Σ AvailableCount"},
  a:{f:null},
  v:"none"},
 
 {cat:"Agent State & Activity",name:"Agent Answer Rate",desc:"% of routed contacts that the agent accepted",
-  std:"(Contacts Accepted / Total Contacts Routed to Agent) x 100
-
-Measures agent responsiveness to routing events.
-Low answer rate may indicate availability or tech issues.",
+  std:"(Contacts Accepted / Total Contacts Routed to Agent) x 100\n\nMeasures agent responsiveness to routing events.\nLow answer rate may indicate availability or tech issues.",
   g:{f:null},
  c:{f:"Not defined as a standalone rate metric.\nNot Responding Count = Σ NotRespondedCount\n(Count, not rate)"},
  a:{f:"Agent Answer Rate =\n(Contacts accepted / Total routing attempts) × 100"},
  v:"none"},
 
 {cat:"Agent State & Activity",name:"Not Responding Count",desc:"Instances agent failed to respond to a routed contact",
-  std:"COUNT of contacts routed to agent where agent
-failed to answer within the configured timeout.
-
-Triggers a missed-call event and re-routes the contact.
-High count indicates availability issues.",
+  std:"COUNT of contacts routed to agent where agent\nfailed to answer within the configured timeout.\n\nTriggers a missed-call event and re-routes the contact.\nHigh count indicates availability issues.",
   g:{f:"Tracked in adherence as Noncompliant (NC) time.\n% Adherence = 100 - ((NC+UNC)×100 / (ST+UNC))"},
  c:{f:"Not Responding Count = Σ NotRespondedCount"},
  a:{f:"Agent Non-Response =\nCOUNT contacts routed but not answered\n\nAgent Non-Response Without Abandon =\nCOUNT voice contacts not answered\nexcluding customer abandons"},
  v:"low"},
 
 {cat:"Agent State & Activity",name:"Not Responding Total Time",desc:"Total time agent spent in Not Responding state",
-  std:"SUM of time spent in Not Responding state
-across all instances.",
+  std:"SUM of time spent in Not Responding state\nacross all instances.",
   g:{f:null},
  c:{f:"Not Responding Total Time = Σ NotRespondedDuration"},
  a:{f:null},
  v:"none"},
 
 {cat:"Agent State & Activity",name:"Average Not Responding Time",desc:"Mean duration per Not Responding instance",
-  std:"Total Not Responding Time / Not Responding Count
-
-Mean duration per non-response instance.",
+  std:"Total Not Responding Time / Not Responding Count\n\nMean duration per non-response instance.",
   g:{f:null},
  c:{f:"Avg Not Responding Time =\nΣ NotRespondedDuration / Σ NotRespondedCount"},
  a:{f:null},
  v:"none"},
 
 {cat:"Agent State & Activity",name:"Agent Non-Productive Time",desc:"Time in custom status (not available, not on contact)",
-  std:"Time agent is logged in but in a non-available,
-non-contact custom state (e.g., training, meeting, lunch).
-
-Also called AUX time. Used in Shrinkage:
-Shrinkage = NPT / Total Logged-In Time.",
+  std:"Time agent is logged in but in a non-available,\nnon-contact custom state (e.g., training, meeting, lunch).\n\nAlso called AUX time. Used in Shrinkage:\nShrinkage = NPT / Total Logged-In Time.",
   g:{f:null},
  c:{f:"Not broken out separately in Analyzer.\nNon-productive time implicit in Occupancy calc."},
  a:{f:"Agent Non-Productive Time =\nnonProductiveTime / 1000\n\n% Agent Non-Productive Time =\n(Non-productive time / Available time) × 100"},
  v:"none"},
 
 {cat:"Agent State & Activity",name:"Sudden Disconnected Count",desc:"Calls terminated immediately after connection (within threshold)",
-  std:"COUNT of contacts disconnected within a short threshold
-(e.g., <3 seconds) after connection.
-
-Typically indicates wrong numbers, voicemail hits,
-or abandoned outbound connections.",
+  std:"COUNT of contacts disconnected within a short threshold\n(e.g., <3 seconds) after connection.\n\nTypically indicates wrong numbers, voicemail hits,\nor abandoned outbound connections.",
   g:{f:null},
  c:{f:"Sudden Disconnected Count = Σ DisconnectedCount\n(Calls disconnected within configured time threshold)"},
  a:{f:"Contacts Agent Hung Up First =\nCOUNT contacts where agent disconnected first"},
  v:"none"},
 
 {cat:"Agent State & Activity",name:"Wellness Breaks",desc:"AI-detected burnout-based automated wellness breaks offered",
-  std:"Emerging metric - no formal industry standard.
-
-Generally: COUNT of breaks offered or taken based
-on agent behavioral fatigue signals.",
+  std:"Emerging metric - no formal industry standard.\n\nGenerally: COUNT of breaks offered or taken based\non agent behavioral fatigue signals.",
   g:{f:null},
  c:{f:"Wellness Breaks =\nCOUNT of automated wellness breaks offered\nbased on AI agent burnout detection"},
  a:{f:null},
@@ -469,50 +399,35 @@ on agent behavioral fatigue signals.",
 
 // ── INBOUND METRICS ────────────────────────────────────────────────────────────
 {cat:"Inbound Metrics",name:"Inbound Reserved (Ringing) Count",desc:"Times agent entered Inbound Reserved / Ringing state",
-  std:"COUNT of times the agent's phone alerted (rang)
-for an inbound contact before being answered.
-
-Each ringing event = 1 count.",
+  std:"COUNT of times the agent's phone alerted (rang)\nfor an inbound contact before being answered.\n\nEach ringing event = 1 count.",
   g:{f:null},
  c:{f:"Inbound Reserved Count = Σ RingingCount"},
  a:{f:"Agent Incoming Connecting Time =\nΣ connecting time for inbound-initiated contacts\n(SUM_CONNECTING_TIME_AGENT, method=INBOUND)"},
  v:"none"},
 
 {cat:"Inbound Metrics",name:"Inbound Reserved Total Time",desc:"Total duration in Inbound Reserved (ringing) state",
-  std:"SUM of all ringing/alerting durations for inbound contacts
-before agent answers.
-
-Also called Alert Duration. Not included in AHT.",
+  std:"SUM of all ringing/alerting durations for inbound contacts\nbefore agent answers.\n\nAlso called Alert Duration. Not included in AHT.",
   g:{f:null},
  c:{f:"Inbound Reserved Total Time = Σ RingingDuration"},
  a:{f:"Agent Incoming Connecting Time =\nΣ INBOUND connecting time / 1000"},
  v:"none"},
 
 {cat:"Inbound Metrics",name:"Average Inbound Reserved Time",desc:"Mean ringing/reserved duration per inbound contact",
-  std:"Total Ringing Duration / Ringing Count
-
-Mean alerting time per inbound contact.
-High avg may indicate agent not ready.",
+  std:"Total Ringing Duration / Ringing Count\n\nMean alerting time per inbound contact.\nHigh avg may indicate agent not ready.",
   g:{f:null},
  c:{f:"Avg Inbound Reserved Time =\nΣ RingingDuration / Σ RingingCount"},
  a:{f:"Avg Agent Incoming Connecting Time =\nAVG_AGENT_CONNECTING_TIME\nfiltered to INBOUND method"},
  v:"none"},
 
 {cat:"Inbound Metrics",name:"Inbound Connected Count",desc:"Number of inbound calls connected to agent",
-  std:"COUNT of inbound contacts successfully answered
-by an agent.
-
-Equivalent to Calls Answered.",
+  std:"COUNT of inbound contacts successfully answered\nby an agent.\n\nEquivalent to Calls Answered.",
   g:{f:"Total contacts distributed = Σ CallsDistributed_i"},
  c:{f:"Inbound Connected Count = Σ ConnectedCount"},
  a:{f:"Contacts Handled Incoming =\nCOUNT handled incoming contacts"},
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Inbound Connected Total Time (Talk)",desc:"Total talk time on inbound calls",
-  std:"SUM of active conversation durations for inbound contacts.
-
-Excludes hold time. Also called Talk Time.
-Component of AHT.",
+  std:"SUM of active conversation durations for inbound contacts.\n\nExcludes hold time. Also called Talk Time.\nComponent of AHT.",
   g:{f:"Included in AHT calculation\n(not broken out separately in CCPerf docs)"},
  c:{f:"Inbound Connected Total Time = Σ ConnectedDuration\n(Excludes hold and consult time)"},
  a:{f:"Agent Interaction Time =\nΣ AgentInteractionDuration\n(where both duration and connected timestamp present)"},
@@ -520,20 +435,14 @@ Component of AHT.",
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Inbound Hold Count",desc:"Number of times callers were placed on hold",
-  std:"COUNT of times an inbound caller was placed on hold.
-
-Multiple holds on one call = multiple counts.
-High hold count may indicate training gaps.",
+  std:"COUNT of times an inbound caller was placed on hold.\n\nMultiple holds on one call = multiple counts.\nHigh hold count may indicate training gaps.",
   g:{f:null},
  c:{f:"Inbound Hold Count = Σ HoldCount"},
  a:{f:"Contacts Put On Hold =\nCOUNT contacts placed on hold"},
  v:"none"},
 
 {cat:"Inbound Metrics",name:"Inbound Hold Total Time",desc:"Total cumulative hold time for inbound contacts",
-  std:"SUM of all hold durations for inbound contacts.
-
-Component of AHT. Target: minimize hold time
-through better agent preparation.",
+  std:"SUM of all hold durations for inbound contacts.\n\nComponent of AHT. Target: minimize hold time\nthrough better agent preparation.",
   g:{f:"Included in AHT calculation\n(not a standalone metric in CCPerf docs)"},
  c:{f:"Inbound Hold Total Time = Σ HoldDuration"},
  a:{f:"Customer Hold Time =\nΣ Agent.CustomerHoldDuration"},
@@ -541,10 +450,7 @@ through better agent preparation.",
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Average Inbound Hold Time",desc:"Mean hold duration per inbound contact",
-  std:"Total Hold Time / Hold Count
-
-Mean hold duration per inbound contact.
-Common benchmark: < 60 seconds.",
+  std:"Total Hold Time / Hold Count\n\nMean hold duration per inbound contact.\nCommon benchmark: < 60 seconds.",
   g:{f:null},
  c:{f:"Avg Inbound Hold Time =\nΣ HoldDuration / Σ HoldCount"},
  a:{f:"Avg Customer Hold Time =\nΣ CustomerHoldDuration\n/ contacts with hold\n\nAvg Customer Hold Time (All Contacts) =\nΣ CustomerHoldDuration / total contacts"},
@@ -552,38 +458,28 @@ Common benchmark: < 60 seconds.",
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Inbound Contact Total Time",desc:"Total inbound interaction duration (talk + hold combined)",
-  std:"Talk Time + Hold Time (combined inbound contact duration).
-
-Excludes ACW. Total handling time before wrap-up.",
+  std:"Talk Time + Hold Time (combined inbound contact duration).\n\nExcludes ACW. Total handling time before wrap-up.",
   g:{f:null},
  c:{f:"Inbound Contact Total Time =\nΣ ConnectedDuration + Σ HoldDuration"},
  a:{f:"Agent Interaction and Hold Time =\nΣ (AgentInteractionDuration + CustomerHoldDuration)\n\nAvg Interaction & Hold Time =\nΣ (Interaction + Hold) / ContactCount"},
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Average Inbound Contact Time",desc:"Mean total inbound contact duration (talk + hold)",
-  std:"(Total Talk Time + Total Hold Time) / Contacts Handled
-
-Mean contact duration excluding ACW.",
+  std:"(Total Talk Time + Total Hold Time) / Contacts Handled\n\nMean contact duration excluding ACW.",
   g:{f:null},
  c:{f:"Avg Inbound Contact Time =\n(Σ ConnectedDuration + Σ HoldDuration)\n/ Σ ConnectedCount"},
  a:{f:"Avg Agent Interaction and Hold Time =\nAVG(AgentInteractionDuration + CustomerHoldDuration)"},
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Inbound Wrapup (ACW) Count",desc:"Number of wrapup periods after inbound calls",
-  std:"COUNT of post-call work periods following inbound contacts.
-
-Normally equals Contacts Handled unless some
-interactions skip ACW (e.g., auto-wrap).",
+  std:"COUNT of post-call work periods following inbound contacts.\n\nNormally equals Contacts Handled unless some\ninteractions skip ACW (e.g., auto-wrap).",
   g:{f:null},
  c:{f:"Inbound Wrapup Count = Σ WrapupCount"},
  a:{f:"Tracked implicitly via After Contact Work Time.\nNo standalone wrapup count metric defined."},
  v:"none"},
 
 {cat:"Inbound Metrics",name:"Inbound Wrapup Total Time",desc:"Total ACW/wrapup time after inbound contacts",
-  std:"SUM of all After-Call Work (ACW) durations for inbound contacts.
-
-Component of AHT. High ACW may indicate
-complex dispositions or system inefficiency.",
+  std:"SUM of all After-Call Work (ACW) durations for inbound contacts.\n\nComponent of AHT. High ACW may indicate\ncomplex dispositions or system inefficiency.",
   g:{f:"Included in AHT calculation\n(not a standalone metric in CCPerf docs)"},
  c:{f:"Inbound Wrapup Total Time = Σ WrapupDuration"},
  a:{f:"After Contact Work Time =\nIf ACW duration present → ACW duration\nElse if connected → 0\nFinal = Σ all results"},
@@ -591,10 +487,7 @@ complex dispositions or system inefficiency.",
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Average Inbound Wrapup Time",desc:"Mean ACW/wrapup duration per inbound contact",
-  std:"Total ACW Time / ACW Count
-
-Mean after-call work duration.
-Common benchmark: 30-60 seconds.",
+  std:"Total ACW Time / ACW Count\n\nMean after-call work duration.\nCommon benchmark: 30-60 seconds.",
   g:{f:null},
  c:{f:"Avg Inbound Wrapup Time =\nΣ WrapupDuration / Σ WrapupCount"},
  a:{f:"Avg After Contact Work Time =\nΣ ACWDuration / ContactCount\n(0 if connected but no ACW recorded)"},
@@ -602,10 +495,7 @@ Common benchmark: 30-60 seconds.",
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Inbound Average Handle Time (AHT)",desc:"Mean total handling time for inbound contacts",
-  std:"(Inbound Talk + Hold + ACW) / Inbound Contacts Handled
-
-Same formula as overall AHT scoped to inbound only.
-All three components included.",
+  std:"(Inbound Talk + Hold + ACW) / Inbound Contacts Handled\n\nSame formula as overall AHT scoped to inbound only.\nAll three components included.",
   g:{f:"Σ(AHT_i × CH_i) / Σ(CH_i)\nWeighted avg — includes talk + hold + ACW"},
  c:{f:"Inbound AHT =\n(Σ ConnectedDuration + Σ WrapupDuration)\n/ Σ ConnectedCount\nNote: HOLD NOT included"},
  a:{f:"AHT = Σ(Interaction + Hold + ACW) / Contacts\nAll three components included"},
@@ -613,66 +503,49 @@ All three components included.",
 
 // ── OUTBOUND / OUTDIAL ─────────────────────────────────────────────────────────
 {cat:"Outbound / Outdial",name:"Outdial Reserved Count",desc:"Times agent entered Outdial Reserved (ringing) state",
-  std:"COUNT of transitions into Outdial Reserved state
-(outbound call initiated but not yet connected).",
+  std:"COUNT of transitions into Outdial Reserved state\n(outbound call initiated but not yet connected).",
   g:{f:null},
  c:{f:"Outdial Reserved Count = Σ OutdialRingingCount"},
  a:{f:null},
  v:"none"},
 
 {cat:"Outbound / Outdial",name:"Outdial Reserved Total Time",desc:"Total duration in Outdial Reserved state",
-  std:"SUM of outbound ringing/reserved durations before connection.
-
-Time from dial initiation to live party connection.",
+  std:"SUM of outbound ringing/reserved durations before connection.\n\nTime from dial initiation to live party connection.",
   g:{f:null},
  c:{f:"Outdial Reserved Total Time = Σ OutdialRingingDuration"},
  a:{f:"Agent Outbound Connecting Time =\nΣ connecting time for OUTBOUND initiated contacts / 1000"},
  v:"none"},
 
 {cat:"Outbound / Outdial",name:"Average Outdial Reserved Time",desc:"Mean outdial reserved/ringing duration",
-  std:"Total Outdial Reserved Time / Outdial Reserved Count
-
-Mean time from dial to connection for outbound.",
+  std:"Total Outdial Reserved Time / Outdial Reserved Count\n\nMean time from dial to connection for outbound.",
   g:{f:null},
  c:{f:"Avg Outdial Reserved Time =\nΣ OutdialRingingDuration / Σ OutdialRingingCount"},
  a:{f:"Avg Agent Outbound Connecting Time =\nAVG_AGENT_CONNECTING_TIME (OUTBOUND)"},
  v:"none"},
 
 {cat:"Outbound / Outdial",name:"Outdial Attempted Count",desc:"Number of outbound call attempts initiated",
-  std:"COUNT of all outbound call attempts initiated,
-regardless of whether they connected.
-
-Includes answered, busy, no-answer, voicemail.",
+  std:"COUNT of all outbound call attempts initiated,\nregardless of whether they connected.\n\nIncludes answered, busy, no-answer, voicemail.",
   g:{f:null},
  c:{f:"Outdial Attempted Count = Σ OutdialRingingCount\n(All attempts, including unanswered)"},
  a:{f:"Campaign Send Attempts = COUNT send attempt records"},
  v:"none"},
 
 {cat:"Outbound / Outdial",name:"Outdial Connected Count",desc:"Successfully connected outbound calls",
-  std:"COUNT of outbound calls where a live party
-was connected.
-
-Sub-metric: Human Answered = live human connections.",
+  std:"COUNT of outbound calls where a live party\nwas connected.\n\nSub-metric: Human Answered = live human connections.",
   g:{f:null},
  c:{f:"Outdial Connected Count = Σ OutdialConnectedCount"},
  a:{f:"Contacts Handled Outbound =\nCOUNT handled outbound contacts\n\nHuman Answered =\nCOUNT contacts answered by humans"},
  v:"low"},
 
 {cat:"Outbound / Outdial",name:"Outdial Connected Total Time",desc:"Total talk time on outbound calls (excl. hold)",
-  std:"SUM of outbound conversation durations
-(talk time only, excluding hold).
-
-Component of Outdial AHT.",
+  std:"SUM of outbound conversation durations\n(talk time only, excluding hold).\n\nComponent of Outdial AHT.",
   g:{f:null},
  c:{f:"Outdial Connected Total Time = Σ OutdialConnectedDuration\n(Conversation time excl. hold and consult)"},
  a:{f:"Avg Outbound Agent Interaction Time =\nΣ agent interaction time for outbound\n/ outbound contact count"},
  v:"none"},
 
 {cat:"Outbound / Outdial",name:"Outdial Talk Time",desc:"Pure conversation time on outbound calls (no hold)",
-  std:"Outbound Connected Time - Outbound Hold Time
-
-Pure conversation time on outbound calls,
-excluding any hold periods.",
+  std:"Outbound Connected Time - Outbound Hold Time\n\nPure conversation time on outbound calls,\nexcluding any hold periods.",
   g:{f:null},
  c:{f:"Outdial Talk Time =\nOutdialConnectedTime - OutdialHoldDuration"},
  a:{f:null},
@@ -693,28 +566,21 @@ excluding any hold periods.",
  v:"none"},
 
 {cat:"Outbound / Outdial",name:"Average Outdial Hold Time",desc:"Mean hold duration per outbound call",
-  std:"Total Outdial Hold Time / Outdial Hold Count
-
-Mean hold duration per outbound contact.",
+  std:"Total Outdial Hold Time / Outdial Hold Count\n\nMean hold duration per outbound contact.",
   g:{f:null},
  c:{f:"Avg Outdial Hold Time =\nΣ OutdialHoldDuration / Σ OutdialHoldCount"},
  a:{f:null},
  v:"none"},
 
 {cat:"Outbound / Outdial",name:"Outdial Contact Total Time",desc:"Total outbound duration (talk + hold)",
-  std:"Outbound Talk Time + Outbound Hold Time
-
-Total handling duration for outbound contacts
-excluding ACW.",
+  std:"Outbound Talk Time + Outbound Hold Time\n\nTotal handling duration for outbound contacts\nexcluding ACW.",
   g:{f:null},
  c:{f:"Outdial Contact Total Time =\nΣ OutdialConnectedDuration + Σ HoldDuration"},
  a:{f:null},
  v:"none"},
 
 {cat:"Outbound / Outdial",name:"Average Outdial Contact Time",desc:"Mean total outdial contact duration (talk + hold)",
-  std:"(Outdial Talk + Outdial Hold) / Outdial Connected Count
-
-Mean total contact duration for outbound.",
+  std:"(Outdial Talk + Outdial Hold) / Outdial Connected Count\n\nMean total contact duration for outbound.",
   g:{f:null},
  c:{f:"Avg Outdial Contact Time =\n(Σ OutdialConnDur + Σ HoldDur)\n/ Σ OutdialConnectedCount"},
  a:{f:null},
@@ -735,38 +601,28 @@ Mean total contact duration for outbound.",
  v:"none"},
 
 {cat:"Outbound / Outdial",name:"Average Outdial Wrapup Time",desc:"Mean ACW/wrapup duration per outbound call",
-  std:"Total Outdial ACW / Outdial ACW Count
-
-Mean after-call work duration for outbound contacts.",
+  std:"Total Outdial ACW / Outdial ACW Count\n\nMean after-call work duration for outbound contacts.",
   g:{f:null},
  c:{f:"Avg Outdial Wrapup Time =\nΣ OutdialWrapupDuration / Σ OutdialWrapupCount"},
  a:{f:null},
  v:"none"},
 
 {cat:"Outbound / Outdial",name:"Outdial Average Handle Time",desc:"Mean full handling duration for outbound calls",
-  std:"(Outdial Talk + Outdial Hold + Outdial ACW)
-/ Outdial Contacts Handled
-
-Same formula as inbound AHT scoped to outbound only.",
+  std:"(Outdial Talk + Outdial Hold + Outdial ACW)\n/ Outdial Contacts Handled\n\nSame formula as inbound AHT scoped to outbound only.",
   g:{f:"Same AHT formula applied to all interaction types\n(not separated inbound/outbound in CCPerf docs)"},
  c:{f:"Outdial AHT =\n(Σ OutdialConnDur + Σ OutdialWrapDur)\n/ Σ OutdialConnectedCount\nNote: HOLD NOT included"},
  a:{f:"Avg Handle Time applies to all contacts.\nNo explicit separate outdial AHT formula\n(filter by OUTBOUND initiation method)"},
  v:"medium"},
 
 {cat:"Outbound / Outdial",name:"Average Dials per Minute",desc:"Rate of outbound dial attempts",
-  std:"Total Dial Attempts / Total Campaign Minutes
-
-Measures outbound dialer efficiency. Used in
-predictive dialing tuning. Regulatory limits may apply.",
+  std:"Total Dial Attempts / Total Campaign Minutes\n\nMeasures outbound dialer efficiency. Used in\npredictive dialing tuning. Regulatory limits may apply.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Dials per Minute =\nΣ Dials / Σ Minutes\n(Campaign metric)"},
  v:"none"},
 
 {cat:"Outbound / Outdial",name:"Outdial Average Connected Time",desc:"Mean outbound conversation duration (total including hold)",
-  std:"Total Outdial Connected Time / Outdial Contacts Handled
-
-Mean conversation duration per connected outbound contact.",
+  std:"Total Outdial Connected Time / Outdial Contacts Handled\n\nMean conversation duration per connected outbound contact.",
   g:{f:null},
  c:{f:"Outdial Avg Connected Time =\nOutdialConnectedTime / OutdialContactHandled"},
  a:{f:null},
@@ -774,35 +630,28 @@ Mean conversation duration per connected outbound contact.",
 
 // ── CONSULT / TRANSFER / CONFERENCE ────────────────────────────────────────────
 {cat:"Consult / Transfer / Conference",name:"Consult Answer Count",desc:"Consult requests received from other agents",
-  std:"COUNT of consultation requests received and answered
-by this agent from other agents.",
+  std:"COUNT of consultation requests received and answered\nby this agent from other agents.",
   g:{f:null},
  c:{f:"Consult Answer Count = Σ ConsultAnswerCount"},
  a:{f:"Contacts Consulted =\nCOUNT consultation transfers"},
  v:"none"},
 
 {cat:"Consult / Transfer / Conference",name:"Consult Answer Total Time",desc:"Total time spent answering consult requests",
-  std:"SUM of time spent answering consultation requests
-from other agents.",
+  std:"SUM of time spent answering consultation requests\nfrom other agents.",
   g:{f:null},
  c:{f:"Consult Answer Total Time = Σ ConsultAnswerDuration"},
  a:{f:null},
  v:"none"},
 
 {cat:"Consult / Transfer / Conference",name:"Average Consult Answer Time",desc:"Mean duration per consult answered",
-  std:"Total Consult Answer Time / Consult Answer Count
-
-Mean duration per consultation answered.",
+  std:"Total Consult Answer Time / Consult Answer Count\n\nMean duration per consultation answered.",
   g:{f:null},
  c:{f:"Avg Consult Answer Time =\nΣ ConsultDuration / Σ ConsultCount"},
  a:{f:null},
  v:"none"},
 
 {cat:"Consult / Transfer / Conference",name:"Consult Request Count",desc:"Consult requests initiated by agent for inbound calls",
-  std:"COUNT of consultations this agent initiated with
-other agents during contacts.
-
-High count may indicate complex calls or training needs.",
+  std:"COUNT of consultations this agent initiated with\nother agents during contacts.\n\nHigh count may indicate complex calls or training needs.",
   g:{f:null},
  c:{f:"Consult Request Count = Σ ConsultRequestCount"},
  a:{f:null},
@@ -816,46 +665,35 @@ High count may indicate complex calls or training needs.",
  v:"none"},
 
 {cat:"Consult / Transfer / Conference",name:"Average Consult Request Time",desc:"Mean consultation initiation duration",
-  std:"Total Consult Request Time / Consult Request Count
-
-Mean duration per consultation initiated.",
+  std:"Total Consult Request Time / Consult Request Count\n\nMean duration per consultation initiated.",
   g:{f:null},
  c:{f:"Avg Consult Request Time =\nΣ ConsultRequestDuration / Σ ConsultRequestCount"},
  a:{f:null},
  v:"none"},
 
 {cat:"Consult / Transfer / Conference",name:"Total Consult Time",desc:"Combined duration of all consultation activities",
-  std:"SUM of all consultation activity time
-(both initiated and answered).",
+  std:"SUM of all consultation activity time\n(both initiated and answered).",
   g:{f:null},
  c:{f:"Total Consult Time = Σ ConsultDuration\n(All consult activities combined)"},
  a:{f:null},
  v:"none"},
 
 {cat:"Consult / Transfer / Conference",name:"Average Consult Time",desc:"Mean overall consultation duration",
-  std:"Total Consult Time / Total Consult Count
-
-Mean overall consultation duration.",
+  std:"Total Consult Time / Total Consult Count\n\nMean overall consultation duration.",
   g:{f:null},
  c:{f:"Avg Consult Time =\nΣ ConsultAnswerDuration / Σ ConsultAnswerCount"},
  a:{f:null},
  v:"none"},
 
 {cat:"Consult / Transfer / Conference",name:"Conference Count",desc:"Instances agent initiated a conference call",
-  std:"COUNT of three-way (or more) conference calls initiated.
-
-Conferencing adds participants without releasing
-the original contact.",
+  std:"COUNT of three-way (or more) conference calls initiated.\n\nConferencing adds participants without releasing\nthe original contact.",
   g:{f:null},
  c:{f:"Conference Count = Σ ConferenceCount"},
  a:{f:null},
  v:"none"},
 
 {cat:"Consult / Transfer / Conference",name:"CTQ Request Count (Inbound)",desc:"Consult-to-Queue requests initiated during inbound calls",
-  std:"COUNT of Consult-to-Queue (CTQ) requests initiated.
-
-CTQ = agent requests help from a queue rather than
-a specific agent.",
+  std:"COUNT of Consult-to-Queue (CTQ) requests initiated.\n\nCTQ = agent requests help from a queue rather than\na specific agent.",
   g:{f:null},
  c:{f:"Inbound CTQ Request Count = Σ CTQRequestCount"},
  a:{f:null},
@@ -883,10 +721,7 @@ a specific agent.",
  v:"none"},
 
 {cat:"Consult / Transfer / Conference",name:"Agent Transfer",desc:"Inbound contacts transferred to another agent after consult",
-  std:"COUNT of contacts transferred to another agent
-after a warm/attended consultation.
-
-Also called Consultative Transfer. Excludes blind transfers.",
+  std:"COUNT of contacts transferred to another agent\nafter a warm/attended consultation.\n\nAlso called Consultative Transfer. Excludes blind transfers.",
   g:{f:null},
  c:{f:"Agent Transfer = Σ AgentToAgentTransferCount"},
  a:{f:"Contacts Transferred Out By Agent =\nCOUNT contacts transferred out by agent action"},
@@ -894,40 +729,28 @@ Also called Consultative Transfer. Excludes blind transfers.",
  v:"low"},
 
 {cat:"Consult / Transfer / Conference",name:"Agent Requeue",desc:"Inbound calls returned to queue by agent",
-  std:"COUNT of contacts returned to a queue by the agent.
-
-May indicate the contact needs a different skill set
-or original routing was incorrect.",
+  std:"COUNT of contacts returned to a queue by the agent.\n\nMay indicate the contact needs a different skill set\nor original routing was incorrect.",
   g:{f:null},
  c:{f:"Agent Requeue = Σ AgentTransferToQueueRequestCount"},
  a:{f:"Contacts Transferred Out Queue =\nCOUNT contacts transferred out to queue"},
  v:"low"},
 
 {cat:"Consult / Transfer / Conference",name:"Blind Transfer",desc:"Calls transferred to external/IVR without agent involvement",
-  std:"COUNT of contacts transferred without prior consultation
-(cold transfer).
-
-Agent releases contact immediately. Risk: customer
-may need to re-explain situation.",
+  std:"COUNT of contacts transferred without prior consultation\n(cold transfer).\n\nAgent releases contact immediately. Risk: customer\nmay need to re-explain situation.",
   g:{f:null},
  c:{f:"Blind Transfer = Σ BlindTransferCount"},
  a:{f:null},
  v:"none"},
 
 {cat:"Consult / Transfer / Conference",name:"Contacts Transferred In",desc:"Contacts received via transfer",
-  std:"COUNT of contacts received via transfer from
-another agent, queue, or external source.
-
-Breakdown: from queue vs. from agent vs. external.",
+  std:"COUNT of contacts received via transfer from\nanother agent, queue, or external source.\n\nBreakdown: from queue vs. from agent vs. external.",
   g:{f:null},
  c:{f:null},
  a:{f:"Contacts Transferred In =\nCOUNT transferred-in contacts\n\nContacts Transferred In From Queue =\nCOUNT transferred in from queue\n\nContacts Transferred In By Agent =\nCOUNT transferred in by agents"},
  v:"none"},
 
 {cat:"Consult / Transfer / Conference",name:"Contacts Transferred Out",desc:"Contacts transferred out from queue/agent",
-  std:"COUNT of contacts transferred away to another destination.
-
-Breakdown: internal vs. external vs. to queue.",
+  std:"COUNT of contacts transferred away to another destination.\n\nBreakdown: internal vs. external vs. to queue.",
   g:{f:null},
  c:{f:null},
  a:{f:"Contacts Transferred Out =\nCOUNT transferred-out contacts\n\nContacts Transferred Out External =\nCOUNT externally transferred\n\nContacts Transferred Out Internal =\nCOUNT internally transferred"},
@@ -936,190 +759,133 @@ Breakdown: internal vs. external vs. to queue.",
 
 // ── SCHEDULING & ADHERENCE ─────────────────────────────────────────────────────
 {cat:"Scheduling & Adherence",name:"Schedule Adherence %",desc:"% of scheduled time agent was in correct state",
-  std:"100 x (Time in Correct Scheduled State
-/ Total Scheduled Time)
-
-Source: ICMI/Verint. Target: 90-95%.
-Key WFM metric for real-time management.",
+  std:"100 x (Time in Correct Scheduled State\n/ Total Scheduled Time)\n\nSource: ICMI/Verint. Target: 90-95%.\nKey WFM metric for real-time management.",
   g:{f:"% Adherence Per Day =\n100 - ((NC + UNC) × 100 / (ST + UNC))\n\nNC  = Noncompliant time\nUNC = Noncompliant time outside scheduled\nST  = Scheduled time"},
  c:{f:"Not defined in Cisco Analyzer documentation."},
  a:{f:"Adherence =\n(Time adhered to schedule\n/ Total scheduled time) × 100\n(via WFM integration)"},
  v:"none",note:"Genesys WFM-native metric with explicit formula"},
 
 {cat:"Scheduling & Adherence",name:"Adherent Time",desc:"Total time agent adhered to their schedule",
-  std:"Total time the agent was in the state
-prescribed by their schedule.
-
-Adherent Time + Non-Adherent Time = Scheduled Time.",
+  std:"Total time the agent was in the state\nprescribed by their schedule.\n\nAdherent Time + Non-Adherent Time = Scheduled Time.",
   g:{f:"Adherent time = ST - NC\n(Scheduled time minus noncompliant time)"},
  c:{f:null},
  a:{f:"Adherent Time =\nTotal time agent adhered to schedule"},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"Non-Adherent Time",desc:"Total time agent deviated from schedule",
-  std:"Total time agent was in a different state
-than their schedule prescribed.
-
-Causes: late starts, early breaks, unplanned absences.",
+  std:"Total time agent was in a different state\nthan their schedule prescribed.\n\nCauses: late starts, early breaks, unplanned absences.",
   g:{f:"NC + UNC (Noncompliant + Unscheduled noncompliant)"},
  c:{f:null},
  a:{f:"Non-Adherent Time =\nTotal time NOT adhering to schedule"},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"Interaction Volume — Forecast",desc:"Forecasted number of interactions for the period",
-  std:"Predicted contacts expected to arrive in a period,
-based on historical patterns and seasonal modeling.
-
-Key input to Erlang C staffing calculations.",
+  std:"Predicted contacts expected to arrive in a period,\nbased on historical patterns and seasonal modeling.\n\nKey input to Erlang C staffing calculations.",
   g:{f:"Forecast IV = from Master Forecast\n(Σ(ForecastIV_i) across timesteps)"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"Interaction Volume — Actual",desc:"Actual number of interactions received",
-  std:"Actual count of contacts that arrived during the period.
-
-Compared to forecast to calculate accuracy.
-High variance triggers intraday adjustments.",
+  std:"Actual count of contacts that arrived during the period.\n\nCompared to forecast to calculate accuracy.\nHigh variance triggers intraday adjustments.",
   g:{f:"Actual IV = Σ(IV_i)\nSum of interactions across timesteps"},
  c:{f:null},
  a:{f:"Contact Volume = COUNT all contacts"},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"IV Forecast % Difference",desc:"Accuracy of interaction volume forecast",
-  std:"(Forecast IV - Actual IV) / Forecast IV x 100
-
-Measures forecast accuracy. Target: +-5-10%.
-High variance causes over/understaffing.",
+  std:"(Forecast IV - Actual IV) / Forecast IV x 100\n\nMeasures forecast accuracy. Target: +-5-10%.\nHigh variance causes over/understaffing.",
   g:{f:"IV % Diff = (Forecast IV - Actual IV) / Forecast IV\n\nIV Difference = Forecast IV - Actual IV"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"AHT — Forecast",desc:"Forecasted Average Handling Time",
-  std:"Weighted average of predicted AHT for the period.
-
-Formula: Sigma(Forecast AHT_i x IV_i) / Sigma(IV_i)
-Key input to Erlang C staffing model.",
+  std:"Weighted average of predicted AHT for the period.\n\nFormula: Sigma(Forecast AHT_i x IV_i) / Sigma(IV_i)\nKey input to Erlang C staffing model.",
   g:{f:"AHT Forecast =\nΣ(ForecastAHT_i × ForecastIV_i)\n/ Σ(ForecastIV_i)\nWeighted by forecasted interaction volume"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"AHT Forecast % Difference",desc:"Accuracy of AHT forecast vs actual",
-  std:"(Forecast AHT - Actual AHT) / Forecast AHT x 100
-
-Measures AHT forecast accuracy. Target: +-5-10%.
-AHT errors have large impact on staffing calculations.",
+  std:"(Forecast AHT - Actual AHT) / Forecast AHT x 100\n\nMeasures AHT forecast accuracy. Target: +-5-10%.\nAHT errors have large impact on staffing calculations.",
   g:{f:"AHT % Diff = (Forecast AHT - Actual AHT) / Forecast AHT\nAHT Difference = Forecast AHT - Actual AHT"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"Service Level — Scheduled",desc:"SL projected from the current schedule",
-  std:"Projected SL achievable based on current staffing schedule.
-
-Calculated via Erlang C algorithm with scheduled agents,
-forecast IV, and forecast AHT as inputs.",
+  std:"Projected SL achievable based on current staffing schedule.\n\nCalculated via Erlang C algorithm with scheduled agents,\nforecast IV, and forecast AHT as inputs.",
   g:{f:"SL Scheduled =\nΣ(ScheduledSL_i × ForecastIV_i) / Σ(ForecastIV_i)\nWeighted avg by forecasted IV per timestep"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"ASA — Scheduled",desc:"ASA projected from the current schedule",
-  std:"Projected Average Speed of Answer based on
-current staffing schedule.
-
-Derived from inverse of Erlang C staffing algorithm.",
+  std:"Projected Average Speed of Answer based on\ncurrent staffing schedule.\n\nDerived from inverse of Erlang C staffing algorithm.",
   g:{f:"ASA Scheduled =\nΣ(ScheduledASA_i × ForecastIV_i) / Σ(ForecastIV_i)\nInverse of modified Erlang staffing algorithm"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"Abandons Factor — Scheduled",desc:"Expected abandoned interactions from schedule",
-  std:"Expected abandonment rate from projected queue wait times
-based on current schedule.
-
-Long predicted queues increase expected abandonment.",
+  std:"Expected abandonment rate from projected queue wait times\nbased on current schedule.\n\nLong predicted queues increase expected abandonment.",
   g:{f:"Abandons Factor Scheduled =\nΣ(ScheduledAF_i × ForecastIV_i) / Σ(ForecastIV_i)\nInverse of modified Erlang staffing algorithm"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"Coverage — Scheduled (FTE)",desc:"Agents scheduled as FTEs covering work in period",
-  std:"Scheduled agent coverage in Full-Time Equivalents (FTEs).
-
-Formula: Agents Scheduled x Interval Duration / Work Day
-Used for capacity planning and budget calculations.",
+  std:"Scheduled agent coverage in Full-Time Equivalents (FTEs).\n\nFormula: Agents Scheduled x Interval Duration / Work Day\nUsed for capacity planning and budget calculations.",
   g:{f:"Coverage Scheduled =\nΣ(AgentsCovering × 15min) / PaidHoursPerDay\nReturns FTE equivalent"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"Coverage — Optimal",desc:"Coverage required to meet service objectives",
-  std:"FTE coverage required to hit the service level target
-given forecast IV and AHT.
-
-Derived from Erlang C. Gap = over/understaffing indicator.",
+  std:"FTE coverage required to hit the service level target\ngiven forecast IV and AHT.\n\nDerived from Erlang C. Gap = over/understaffing indicator.",
   g:{f:"Derived from Erlang algorithm:\nCoverage needed to achieve target SL given\nactual interaction volume and AHT"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"Coverage — Difference",desc:"Gap between optimal and scheduled coverage",
-  std:"Optimal Coverage - Scheduled Coverage
-
-Positive = understaffed. Negative = overstaffed.
-Primary driver of intraday staffing adjustments.",
+  std:"Optimal Coverage - Scheduled Coverage\n\nPositive = understaffed. Negative = overstaffed.\nPrimary driver of intraday staffing adjustments.",
   g:{f:"Coverage Difference = Optimal - Scheduled"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"Number of Agents — Scheduled",desc:"Scheduled headcount for the period",
-  std:"Count of agents on the schedule (headcount) for the period.
-
-Simple headcount, not FTE-adjusted.",
+  std:"Count of agents on the schedule (headcount) for the period.\n\nSimple headcount, not FTE-adjusted.",
   g:{f:"Agents Scheduled =\nSimple average across report time range"},
  c:{f:null},
  a:{f:"Scheduled = COUNT scheduled agents"},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"Number of Agents — Actual",desc:"Agents actually logged in during the period",
-  std:"Count of agents actually logged in during the period.
-
-Compared to scheduled headcount to measure
-staffing compliance and shrinkage.",
+  std:"Count of agents actually logged in during the period.\n\nCompared to scheduled headcount to measure\nstaffing compliance and shrinkage.",
   g:{f:"Agents Actual =\nΣ(Agents_i) / Number of timesteps"},
  c:{f:"Unique Agents Logged In =\nCOUNT distinct agents with login activity\n(one login per unique agent per day)\n\nConcurrent Agents Logged In =\nPeak simultaneous agent logins"},
  a:{f:"Agents Count =\nCOUNT agents logged into CCP\n\nOnline Agents =\nCOUNT agents in routable status"},
  v:"low"},
 
 {cat:"Scheduling & Adherence",name:"Effective Staffing",desc:"Ratio of actual needed agents to scheduled agents",
-  std:"(Agents Required / Agents Scheduled) x 100
-
-100% = perfectly staffed. <100% = overstaffed.
->100% = understaffed.",
+  std:"(Agents Required / Agents Scheduled) x 100\n\n100% = perfectly staffed. <100% = overstaffed.\n>100% = understaffed.",
   g:{f:null},
  c:{f:null},
  a:{f:"Effective Staffing =\n(Actual agents needed / Scheduled agents) × 100"},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"Budget",desc:"Estimated cost for scheduled coverage in period",
-  std:"Estimated labor cost for the scheduled period.
-
-Typically: (FTE Coverage / 4) x Hourly Rate x Overhead.
-Used for workforce planning and cost forecasting.",
+  std:"Estimated labor cost for the scheduled period.\n\nTypically: (FTE Coverage / 4) x Hourly Rate x Overhead.\nUsed for workforce planning and cost forecasting.",
   g:{f:"Per 15-min timestep:\nBudget = (Coverage/4)\n  × (100/(100 - PlannedOverhead%))\n  × (100/(100 - UnplannedOverhead%))\n  × HourlyWage"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Scheduling & Adherence",name:"Occupancy — Scheduled",desc:"Expected occupancy from the current schedule",
-  std:"Expected occupancy based on current staffing plan.
-
-Higher staffing = lower scheduled occupancy
-(more available time per agent per Erlang C).",
+  std:"Expected occupancy based on current staffing plan.\n\nHigher staffing = lower scheduled occupancy\n(more available time per agent per Erlang C).",
   g:{f:"Avg Occupancy Scheduled =\nΣ(ScheduledOcc_i × ForecastIV_i)\n/ Σ(ForecastIV_i)"},
  c:{f:null},
  a:{f:null},
@@ -1127,50 +893,35 @@ Higher staffing = lower scheduled occupancy
 
 // ── QUALITY & CSAT ─────────────────────────────────────────────────────────────
 {cat:"Quality & CSAT",name:"Average Auto CSAT",desc:"Mean AI-predicted customer satisfaction score",
-  std:"Mean predicted customer satisfaction score from
-AI/ML analysis of contact transcripts.
-
-Emerging metric; no formal industry standard formula yet.
-AI-predicted scores correlate with survey-based CSAT.",
+  std:"Mean predicted customer satisfaction score from\nAI/ML analysis of contact transcripts.\n\nEmerging metric; no formal industry standard formula yet.\nAI-predicted scores correlate with survey-based CSAT.",
   g:{f:"Not in WFM docs.\nAvailable via Genesys Cloud CX\nSpeech & Text Analytics module."},
  c:{f:"Avg Auto CSAT =\nAverage of AI-generated CSAT prediction scores"},
  a:{f:"Available via Contact Lens.\nNot defined as formula in core Connect docs."},
  v:"none"},
 
 {cat:"Quality & CSAT",name:"Max / Min Auto CSAT",desc:"Highest and lowest AI-predicted CSAT scores",
-  std:"Highest and lowest AI-predicted CSAT scores in the period.
-
-Used to identify best and worst-performing interactions
-for coaching and QA purposes.",
+  std:"Highest and lowest AI-predicted CSAT scores in the period.\n\nUsed to identify best and worst-performing interactions\nfor coaching and QA purposes.",
   g:{f:null},
  c:{f:"Max Auto CSAT = MAX prediction score\nMin Auto CSAT = MIN prediction score"},
  a:{f:null},
  v:"none"},
 
 {cat:"Quality & CSAT",name:"Evaluations Performed",desc:"Count of quality evaluations completed",
-  std:"COUNT of quality monitoring evaluations completed
-by QA evaluators during the period.",
+  std:"COUNT of quality monitoring evaluations completed\nby QA evaluators during the period.",
   g:{f:null},
  c:{f:null},
  a:{f:"Evaluations Performed = COUNT evaluations"},
  v:"none"},
 
 {cat:"Quality & CSAT",name:"Average Evaluation Score",desc:"Mean quality evaluation score",
-  std:"SUM of evaluation scores / COUNT of evaluations
-
-Weighted variant weights by question/section importance.
-Typical target: 85-90% or higher.",
+  std:"SUM of evaluation scores / COUNT of evaluations\n\nWeighted variant weights by question/section importance.\nTypical target: 85-90% or higher.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Evaluation Score =\nΣ evaluation scores / Evaluation count\n\nAvg Weighted Evaluation Score =\nWEIGHTED_AVG(evaluation scores)"},
  v:"none"},
 
 {cat:"Quality & CSAT",name:"Automatic Fails %",desc:"% of evaluations with automatic scoring failures",
-  std:"(Contacts with Critical Failure / Total Evaluated) x 100
-
-Critical failures auto-fail regardless of total score
-(e.g., compliance breach, disclosure omission).
-Target: 0%.",
+  std:"(Contacts with Critical Failure / Total Evaluated) x 100\n\nCritical failures auto-fail regardless of total score\n(e.g., compliance breach, disclosure omission).\nTarget: 0%.",
   g:{f:null},
  c:{f:null},
  a:{f:"Automatic Fails % =\n(Automatic fails / Total evaluations) × 100\n\nNote: Fails cascade (question → section → form).\nCalibrations excluded."},
@@ -1178,106 +929,77 @@ Target: 0%.",
 
 // ── CHAT / DIGITAL ─────────────────────────────────────────────────────────────
 {cat:"Chat / Digital",name:"Average Agent Response Time",desc:"Mean time for agent to respond to customer messages",
-  std:"SUM of agent response times / COUNT of responses
-
-Digital/chat-specific. Target: <60 sec for chat.
-Source: ContactBabel Digital Contact Center report.",
+  std:"SUM of agent response times / COUNT of responses\n\nDigital/chat-specific. Target: <60 sec for chat.\nSource: ContactBabel Digital Contact Center report.",
   g:{f:"Not in WFM docs.\nAvailable in Genesys Cloud CX digital reporting."},
  c:{f:"Not defined in Cisco Analyzer docs\nfor chat channel."},
  a:{f:"Avg Agent Response Time =\nΣ TotalResponseTimeInMillis\n/ Σ NumResponses / 1000\n(ms converted to seconds)"},
  v:"none"},
 
 {cat:"Chat / Digital",name:"Average Agent First Response Time",desc:"Mean time for agent's first reply to customer",
-  std:"First Response Timestamp - Queue Exit Timestamp
-
-Time from contact assignment to agent's first message.
-Key metric for digital channel SLA management.",
+  std:"First Response Timestamp - Queue Exit Timestamp\n\nTime from contact assignment to agent's first message.\nKey metric for digital channel SLA management.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Agent First Response Time =\nΣ AgentFirstResponseTimeInMillis\n/ Contact count / 1000"},
  v:"none"},
 
 {cat:"Chat / Digital",name:"Agent First Response Wait Time",desc:"Time from enqueue to agent's first response",
-  std:"First Response Timestamp - Enqueue Timestamp
-
-Time from contact entering the queue to agent's first
-response. Broader than First Response Time.",
+  std:"First Response Timestamp - Enqueue Timestamp\n\nTime from contact entering the queue to agent's first\nresponse. Broader than First Response Time.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Contact First Response Wait Time =\nAVG(AgentFirstResponseTimestamp\n    - EnqueueTimestamp) in ms"},
  v:"none"},
 
 {cat:"Chat / Digital",name:"Average Agent Message Length",desc:"Mean character length of agent messages",
-  std:"SUM of agent message character counts
-/ SUM of messages sent
-
-Indicator of response quality. Very short messages
-may indicate over-reliance on canned responses.",
+  std:"SUM of agent message character counts\n/ SUM of messages sent\n\nIndicator of response quality. Very short messages\nmay indicate over-reliance on canned responses.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Agent Message Length =\nΣ Agent MessageLengthInChars\n/ Σ Agent MessagesSent"},
  v:"none"},
 
 {cat:"Chat / Digital",name:"Average Agent Messages",desc:"Mean number of messages sent by agent per contact",
-  std:"SUM of agent messages / Contacts Handled
-
-Measures interaction thoroughness in digital channels.",
+  std:"SUM of agent messages / Contacts Handled\n\nMeasures interaction thoroughness in digital channels.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Agent Messages =\nAVG(ChatMetrics.AgentMetrics.MessagesSent)"},
  v:"none"},
 
 {cat:"Chat / Digital",name:"Average Customer Response Time",desc:"Mean customer response time in chat",
-  std:"SUM of customer response times / COUNT of responses
-
-Measures customer engagement pace in digital channels.",
+  std:"SUM of customer response times / COUNT of responses\n\nMeasures customer engagement pace in digital channels.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Customer Response Time =\nΣ CustomerResponseTimeInMillis\n/ Σ NumResponses / 1000"},
  v:"none"},
 
 {cat:"Chat / Digital",name:"Average Customer Messages",desc:"Mean number of messages sent by customer per contact",
-  std:"SUM of customer messages / Contacts Handled
-
-High count may indicate unresolved issues or confusion.",
+  std:"SUM of customer messages / Contacts Handled\n\nHigh count may indicate unresolved issues or confusion.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Customer Messages =\nAVG(ChatMetrics.CustomerMetrics.MessagesSent)"},
  v:"none"},
 
 {cat:"Chat / Digital",name:"Average Customer Message Length",desc:"Mean character length of customer messages",
-  std:"SUM of customer message characters
-/ SUM of customer messages sent",
+  std:"SUM of customer message characters\n/ SUM of customer messages sent",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Customer Message Length =\nΣ Customer MessageLengthInChars\n/ Σ Customer MessagesSent"},
  v:"none"},
 
 {cat:"Chat / Digital",name:"Conversations Abandoned",desc:"Chat conversations abandoned before agent response",
-  std:"COUNT of digital conversations ended by customer
-before receiving an agent response.
-
-Digital abandonment rate = (Abandoned / Offered) x 100",
+  std:"COUNT of digital conversations ended by customer\nbefore receiving an agent response.\n\nDigital abandonment rate = (Abandoned / Offered) x 100",
   g:{f:null},
  c:{f:null},
  a:{f:"Conversations Abandoned =\nCOUNT abandoned conversations"},
  v:"none"},
 
 {cat:"Chat / Digital",name:"Average Conversation Duration",desc:"Mean duration of a chat/digital conversation",
-  std:"SUM of conversation durations / Conversation count
-
-End-to-end session duration from first message to close.",
+  std:"SUM of conversation durations / Conversation count\n\nEnd-to-end session duration from first message to close.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Conversation Duration =\nΣ ConvDuration / ConvCount\n\nAvg Conversation Close Time =\nΣ CloseTime / ConvCount"},
  v:"none"},
 
 {cat:"Chat / Digital",name:"WFM Chat Metrics (Genesys)",desc:"Genesys WFM stat objects for chat channel",
-  std:"Standard WFM stat objects applied to chat channel.
-Same definitions as voice adapted for async channel:
-- Volume: entered/handled/abandoned
-- Efficiency: AHT, ASA equivalents
-- Service: service level, distribution rate",
+  std:"Standard WFM stat objects applied to chat channel.\nSame definitions as voice adapted for async channel:\n- Volume: entered/handled/abandoned\n- Efficiency: AHT, ASA equivalents\n- Service: service level, distribution rate",
   g:{f:"WFM_Chat_Entered: COUNT chat interactions\nWFM_Chat_Abandoned: COUNT abandoned chats\nWFM_Chat_Average_Speed_Answer: Avg answer time\nWFM_Chat_Total_Distributed: COUNT distributed\nWFM_Chat_Handle_Time: Total handle time\nWFM_Chat_Handled: COUNT chats handled"},
  c:{f:"Voice/Chat/Email channels tracked via\nChannel Type filter on all agent metrics.\nContacts by Channel:\nVoice = ConnCount (telephony)\nChat = ConnCount (chat)\nEmail = ConnCount (email)"},
  a:{f:"All chat metrics tracked natively.\nChannel filtering via contact type."},
@@ -1285,10 +1007,7 @@ Same definitions as voice adapted for async channel:
 
 // ── CONTACT LENS CONVERSATIONAL ANALYTICS ─────────────────────────────────────
 {cat:"Contact Lens / Conversational Analytics",name:"Average Agent Talk Time",desc:"Mean agent speaking time per contact",
-  std:"SUM of agent speaking intervals / Contact count
-
-Measures agent contribution to conversation.
-Part of talk/listen balance analysis.",
+  std:"SUM of agent speaking intervals / Contact count\n\nMeasures agent contribution to conversation.\nPart of talk/listen balance analysis.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Agent Talk Time =\nΣ Agent talk time intervals / Contact count"},
@@ -1296,68 +1015,49 @@ Part of talk/listen balance analysis.",
  v:"none"},
 
 {cat:"Contact Lens / Conversational Analytics",name:"Average Customer Talk Time",desc:"Mean customer speaking time per contact",
-  std:"SUM of customer speaking intervals / Contact count
-
-Measures customer engagement. Low customer talk
-may indicate agent dominance.",
+  std:"SUM of customer speaking intervals / Contact count\n\nMeasures customer engagement. Low customer talk\nmay indicate agent dominance.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Customer Talk Time =\nΣ Customer talk time intervals / Contact count"},
  v:"none"},
 
 {cat:"Contact Lens / Conversational Analytics",name:"Agent Talk Time %",desc:"Agent speaking time as % of total conversation",
-  std:"SUM of agent talk intervals / Total conversation duration x 100
-
-Healthy range: 40-60%. >70% may indicate poor listening.
-Source: ContactBabel.",
+  std:"SUM of agent talk intervals / Total conversation duration x 100\n\nHealthy range: 40-60%. >70% may indicate poor listening.\nSource: ContactBabel.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Agent Talk Time % =\nΣ Agent talk intervals / Total duration × 100"},
  v:"none"},
 
 {cat:"Contact Lens / Conversational Analytics",name:"Customer Talk Time %",desc:"Customer speaking time as % of total conversation",
-  std:"SUM of customer talk intervals / Total duration x 100
-
-Complement of Agent Talk Time %.",
+  std:"SUM of customer talk intervals / Total duration x 100\n\nComplement of Agent Talk Time %.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Customer Talk Time % =\nΣ Customer talk intervals / Total duration × 100"},
  v:"none"},
 
 {cat:"Contact Lens / Conversational Analytics",name:"Non-Talk Time %",desc:"Silence/hold/dead air as % of total conversation",
-  std:"SUM of silence/hold intervals / Total duration x 100
-
-Includes dead air, hold, and processing pauses.
-High non-talk % indicates inefficiency.",
+  std:"SUM of silence/hold intervals / Total duration x 100\n\nIncludes dead air, hold, and processing pauses.\nHigh non-talk % indicates inefficiency.",
   g:{f:null},
  c:{f:null},
  a:{f:"Non-Talk Time % =\nΣ Non-talk intervals / Total duration × 100\n\nAvg Non-Talk Time =\nΣ NonTalkIntervals / Contact count"},
  v:"none"},
 
 {cat:"Contact Lens / Conversational Analytics",name:"Average Agent Interruptions",desc:"Mean number of times agent interrupted customer",
-  std:"SUM of agent interruptions / Contact count
-
-Interruption = agent speaks while customer is still talking.
-High count indicates poor call control.",
+  std:"SUM of agent interruptions / Contact count\n\nInterruption = agent speaks while customer is still talking.\nHigh count indicates poor call control.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Agent Interruptions =\nΣ Agent interruptions / Contact count"},
  v:"none"},
 
 {cat:"Contact Lens / Conversational Analytics",name:"Average Agent Interruption Time",desc:"Mean total duration of agent interruptions",
-  std:"SUM of interruption durations / Contacts with interruptions
-
-Mean total interruption duration per impacted contact.",
+  std:"SUM of interruption durations / Contacts with interruptions\n\nMean total interruption duration per impacted contact.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Agent Interruption Time =\nΣ Interruption intervals\n/ Contacts with interruptions"},
  v:"none"},
 
 {cat:"Contact Lens / Conversational Analytics",name:"Average Agent Greeting Time",desc:"Mean time from contact start to agent first response",
-  std:"SUM of time to first agent utterance / Contact count
-
-Measures how quickly agent opens the conversation.
-Slow greeting indicates hesitation or system delays.",
+  std:"SUM of time to first agent utterance / Contact count\n\nMeasures how quickly agent opens the conversation.\nSlow greeting indicates hesitation or system delays.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Agent Greeting Time =\nΣ Agent first response time / Contact count"},
@@ -1365,115 +1065,84 @@ Slow greeting indicates hesitation or system delays.",
 
 // ── AI / BOT (Amazon Connect) ──────────────────────────────────────────────────
 {cat:"AI & Bot (Amazon Connect)",name:"AI Handoff Rate",desc:"% of AI-handled contacts escalated to human agents",
-  std:"(AI Contacts Escalated to Human / AI Involved Contacts) x 100
-
-Measures AI containment effectiveness. Lower = better
-self-service. Target varies by use case and channel.",
+  std:"(AI Contacts Escalated to Human / AI Involved Contacts) x 100\n\nMeasures AI containment effectiveness. Lower = better\nself-service. Target varies by use case and channel.",
   g:{f:null},
  c:{f:null},
  a:{f:"AI Handoff Rate =\n(AI handoffs / AI involved contacts) × 100\n\nAI Involved Contacts =\nCOUNT records where contactId + sessionId present"},
  v:"none"},
 
 {cat:"AI & Bot (Amazon Connect)",name:"AI Agent Invocation Success Rate",desc:"% of AI agent invocations that succeeded",
-  std:"(Successful AI Invocations / Total Invocations) x 100
-
-Measures reliability of AI agent execution.
-Emerging metric; no formal industry standard yet.",
+  std:"(Successful AI Invocations / Total Invocations) x 100\n\nMeasures reliability of AI agent execution.\nEmerging metric; no formal industry standard yet.",
   g:{f:null},
  c:{f:null},
  a:{f:"AI Agent Invocation Success Rate =\n(AI agent invocation success\n/ AI agent invocations) × 100\n\nInvocation Success = COUNT where invocationSuccess=true"},
  v:"none"},
 
 {cat:"AI & Bot (Amazon Connect)",name:"AI Prompt Invocation Success Rate",desc:"% of AI prompt invocations that succeeded",
-  std:"(Successful Prompt Invocations / Total Invocations) x 100
-
-Measures AI prompt execution reliability.",
+  std:"(Successful Prompt Invocations / Total Invocations) x 100\n\nMeasures AI prompt execution reliability.",
   g:{f:null},
  c:{f:null},
  a:{f:"AI Prompt Invocation Success Rate =\n(AI prompt invocation success\n/ AI prompt invocations) × 100"},
  v:"none"},
 
 {cat:"AI & Bot (Amazon Connect)",name:"AI Tool Invocation Success Rate",desc:"% of AI tool invocations that succeeded",
-  std:"(Successful Tool Invocations / Total Invocations) x 100
-
-Measures AI tool (function call) execution reliability.",
+  std:"(Successful Tool Invocations / Total Invocations) x 100\n\nMeasures AI tool (function call) execution reliability.",
   g:{f:null},
  c:{f:null},
  a:{f:"AI Tool Invocation Success Rate =\n(AI tool invocation success\n/ AI tool invocations) × 100"},
  v:"none"},
 
 {cat:"AI & Bot (Amazon Connect)",name:"AI Response Completion Rate",desc:"% of AI session responses completed successfully",
-  std:"Rate at which AI sessions produce complete responses
-without error or truncation.
-
-Emerging metric for generative AI quality.",
+  std:"Rate at which AI sessions produce complete responses\nwithout error or truncation.\n\nEmerging metric for generative AI quality.",
   g:{f:null},
  c:{f:null},
  a:{f:"AI Response Completion Rate =\n(Weighted sum of AI completed responses\n/ AI session invocation sum) × 100"},
  v:"none"},
 
 {cat:"AI & Bot (Amazon Connect)",name:"Average AI / Bot Conversation Turns",desc:"Mean number of turns in AI/bot conversations",
-  std:"SUM of conversation turns / Conversation count
-
-A turn = one exchange (customer message + AI response).
-Fewer turns = more efficient self-service resolution.",
+  std:"SUM of conversation turns / Conversation count\n\nA turn = one exchange (customer message + AI response).\nFewer turns = more efficient self-service resolution.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg AI Agent Conv Turns =\nAVG(conversationTurnsInResponse)\n\nAvg AI Conv Turns (session) =\nAVG(avgConversationTurnsInResponse)\n\nAvg Bot Conv Turns =\nΣ ConvTurns / ConvCount"},
  v:"none"},
 
 {cat:"AI & Bot (Amazon Connect)",name:"Average Bot Conversation Time",desc:"Mean duration of bot-handled conversations",
-  std:"SUM of bot conversation durations / Conversation count
-
-Used to assess bot efficiency vs. human AHT.",
+  std:"SUM of bot conversation durations / Conversation count\n\nUsed to assess bot efficiency vs. human AHT.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Bot Conv Time =\nΣ (Conv End - Conv Start) / Conv count"},
  v:"none"},
 
 {cat:"AI & Bot (Amazon Connect)",name:"Average Bot Messages",desc:"Mean number of messages in bot conversations",
-  std:"SUM of bot messages / Conversation count
-
-Measures bot interaction verbosity.",
+  std:"SUM of bot messages / Conversation count\n\nMeasures bot interaction verbosity.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Bot Messages =\nAVG(ChatMetrics.ContactMetrics.TotalBotMessages)"},
  v:"none"},
 
 {cat:"AI & Bot (Amazon Connect)",name:"Proactive Intent Engagement Rate",desc:"% of detected proactive intents that were engaged",
-  std:"(Proactive Intents Engaged / Proactive Intents Detected) x 100
-
-Measures how often customers engage with AI suggestions.
-Emerging metric for AI-driven contact centers.",
+  std:"(Proactive Intents Engaged / Proactive Intents Detected) x 100\n\nMeasures how often customers engage with AI suggestions.\nEmerging metric for AI-driven contact centers.",
   g:{f:null},
  c:{f:null},
  a:{f:"Proactive Intent Engagement Rate =\n(Proactive intents engaged\n/ Proactive intents detected) × 100"},
  v:"none"},
 
 {cat:"AI & Bot (Amazon Connect)",name:"Proactive Intent Response Rate",desc:"% of engaged proactive intents that were answered",
-  std:"(Proactive Intents Answered / Proactive Intents Engaged) x 100
-
-Measures resolution rate from proactive AI suggestions.",
+  std:"(Proactive Intents Answered / Proactive Intents Engaged) x 100\n\nMeasures resolution rate from proactive AI suggestions.",
   g:{f:null},
  c:{f:null},
  a:{f:"Proactive Intent Response Rate =\n(Proactive intents answered\n/ Proactive intents engaged) × 100"},
  v:"none"},
 
 {cat:"AI & Bot (Amazon Connect)",name:"Average AI Prompt/Tool Invocation Latency",desc:"Mean response latency for AI prompt and tool invocations",
-  std:"AVG(Invocation Latency in milliseconds)
-
-Measures AI response speed. Target: <500ms for
-real-time interactions.",
+  std:"AVG(Invocation Latency in milliseconds)\n\nMeasures AI response speed. Target: <500ms for\nreal-time interactions.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg AI Prompt Invocation Latency =\nAVG(invocationLatency) in ms\n\nAvg AI Tool Invocation Latency =\nAVG(invocationLatency) in ms"},
  v:"none"},
 
 {cat:"AI & Bot (Amazon Connect)",name:"Knowledge Content References",desc:"Count of knowledge base articles referenced by AI",
-  std:"COUNT of knowledge base articles surfaced by AI.
-
-Used to measure AI knowledge utilization and
-identify knowledge base coverage gaps.",
+  std:"COUNT of knowledge base articles surfaced by AI.\n\nUsed to measure AI knowledge utilization and\nidentify knowledge base coverage gaps.",
   g:{f:null},
  c:{f:null},
  a:{f:"Knowledge Content References =\nCOUNT records where knowledgeBaseId present"},
@@ -1481,32 +1150,21 @@ identify knowledge base coverage gaps.",
 
 // ── CASE MANAGEMENT ────────────────────────────────────────────────────────────
 {cat:"Case Management (Amazon Connect)",name:"Cases Created / Resolved / Reopened",desc:"Case lifecycle counts",
-  std:"Cases Created: COUNT new cases opened
-Cases Resolved: COUNT cases closed
-Cases Reopened: COUNT previously closed cases reopened
-
-Reopened Rate = (Reopened / Resolved) x 100
-Target: <5%. Indicates first-resolution quality.",
+  std:"Cases Created: COUNT new cases opened\nCases Resolved: COUNT cases closed\nCases Reopened: COUNT previously closed cases reopened\n\nReopened Rate = (Reopened / Resolved) x 100\nTarget: <5%. Indicates first-resolution quality.",
   g:{f:null},
  c:{f:null},
  a:{f:"Cases Created = COUNT case records created\nCases Resolved = COUNT cases marked resolved\nCases Reopened = COUNT cases reopened\nCurrent Cases = COUNT open cases\nCases Resolved on First Contact = COUNT"},
  v:"none"},
 
 {cat:"Case Management (Amazon Connect)",name:"Average Case Resolution Time",desc:"Mean time from case creation to resolution",
-  std:"SUM (Resolution Timestamp - Creation Timestamp)
-/ Cases Resolved
-
-Also called Mean Time to Resolution (MTTR).",
+  std:"SUM (Resolution Timestamp - Creation Timestamp)\n/ Cases Resolved\n\nAlso called Mean Time to Resolution (MTTR).",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Case Resolution Time =\nΣ (ResolutionTimestamp - CreationTimestamp)\n/ Cases resolved"},
  v:"none"},
 
 {cat:"Case Management (Amazon Connect)",name:"Average Contacts per Case",desc:"Mean number of contacts associated per case",
-  std:"SUM of contacts per case / Case count
-
-Lower = more efficient resolution. High count
-indicates complex or chronic issues.",
+  std:"SUM of contacts per case / Case count\n\nLower = more efficient resolution. High count\nindicates complex or chronic issues.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Contacts per Case =\nΣ contact count per case / Case count"},
@@ -1514,36 +1172,28 @@ indicates complex or chronic issues.",
 
 // ── OUTBOUND CAMPAIGNS ─────────────────────────────────────────────────────────
 {cat:"Outbound Campaigns (Amazon Connect)",name:"Campaign Progress Rate",desc:"% of campaign interactions completed",
-  std:"(Completed Interactions / Total Targeted) x 100
-
-Measures outbound campaign execution velocity.",
+  std:"(Completed Interactions / Total Targeted) x 100\n\nMeasures outbound campaign execution velocity.",
   g:{f:null},
  c:{f:null},
  a:{f:"Campaign Progress Rate =\n(Completed interactions / Total interactions) × 100"},
  v:"none"},
 
 {cat:"Outbound Campaigns (Amazon Connect)",name:"Campaign Contacts Abandoned After X Rate",desc:"% of campaign contacts abandoned after X seconds",
-  std:"(Contacts Abandoned After X Seconds / Total Campaign) x 100
-
-Regulatory compliance metric for outbound campaigns.",
+  std:"(Contacts Abandoned After X Seconds / Total Campaign) x 100\n\nRegulatory compliance metric for outbound campaigns.",
   g:{f:null},
  c:{f:null},
  a:{f:"Campaign Contacts Abandoned After X Rate =\n(Contacts abandoned after X sec\n/ Total campaign contacts) × 100"},
  v:"none"},
 
 {cat:"Outbound Campaigns (Amazon Connect)",name:"Callback Contacts Handled",desc:"Callback contacts successfully handled",
-  std:"COUNT of callbacks where agent connected with customer.
-
-Callback Rate = (Handled / Offered) x 100",
+  std:"COUNT of callbacks where agent connected with customer.\n\nCallback Rate = (Handled / Offered) x 100",
   g:{f:null},
  c:{f:null},
  a:{f:"Callback Contacts Handled =\nCOUNT handled callback contacts\n\nCallback Attempts = COUNT attempt records\nCallback Contacts = COUNT callback contacts"},
  v:"none"},
 
 {cat:"Outbound Campaigns (Amazon Connect)",name:"Delivery Attempt Disposition Rate",desc:"% of delivery attempts that were successful",
-  std:"(Successful Deliveries / Total Attempts) x 100
-
-Measures outbound message/campaign delivery effectiveness.",
+  std:"(Successful Deliveries / Total Attempts) x 100\n\nMeasures outbound message/campaign delivery effectiveness.",
   g:{f:null},
  c:{f:null},
  a:{f:"Delivery Attempt Disposition Rate =\n(Successful deliveries\n/ Total delivery attempts) × 100"},
@@ -1551,30 +1201,21 @@ Measures outbound message/campaign delivery effectiveness.",
 
 // ── FLOW / IVR ─────────────────────────────────────────────────────────────────
 {cat:"Flow & IVR (Amazon Connect)",name:"Average Flow Time",desc:"Mean duration of contact flow / IVR execution",
-  std:"SUM of IVR/flow execution durations / Flow count
-
-Measures IVR self-service efficiency. Long flow times
-may indicate confusing menu structures.",
+  std:"SUM of IVR/flow execution durations / Flow count\n\nMeasures IVR self-service efficiency. Long flow times\nmay indicate confusing menu structures.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Flow Time =\nΣ FlowDuration / FlowCount\n\nMin Flow Time = MIN(FlowDuration)\nMax Flow Time = MAX(FlowDuration)"},
  v:"none"},
 
 {cat:"Flow & IVR (Amazon Connect)",name:"Flows Outcome %",desc:"% of flows with a specific outcome",
-  std:"(Specific Outcome Count / Total Flows) x 100
-
-Breaks down IVR outcomes: self-served, transferred,
-abandoned, errored.",
+  std:"(Specific Outcome Count / Total Flows) x 100\n\nBreaks down IVR outcomes: self-served, transferred,\nabandoned, errored.",
   g:{f:null},
  c:{f:null},
  a:{f:"Flows Outcome % =\n(Specific outcome count / Total flows) × 100\n\nFlows Started = COUNT initiated flows"},
  v:"none"},
 
 {cat:"Flow & IVR (Amazon Connect)",name:"Contact Flow Time",desc:"Total time contacts spent in flows/IVR",
-  std:"SUM of time contacts spent navigating IVR/flow.
-
-High flow time may indicate poor IVR design or
-need for flow optimization.",
+  std:"SUM of time contacts spent navigating IVR/flow.\n\nHigh flow time may indicate poor IVR design or\nneed for flow optimization.",
   g:{f:null},
  c:{f:null},
  a:{f:"Contact Flow Time =\nΣ flow execution duration"},
@@ -1582,89 +1223,63 @@ need for flow optimization.",
 
 // ── MISC VOLUME & QUEUE ────────────────────────────────────────────────────────
 {cat:"Volume & Queue Counts",name:"Contacts Queued",desc:"Contacts added to any queue",
-  std:"COUNT of contacts that entered any queue in the period.
-
-Also called Contacts Offered. Includes contacts that
-were subsequently abandoned or transferred.",
+  std:"COUNT of contacts that entered any queue in the period.\n\nAlso called Contacts Offered. Includes contacts that\nwere subsequently abandoned or transferred.",
   g:{f:"Σ CallsDistributed_i + Σ AbandonedCalls_i\n(Total offered to queues)"},
  c:{f:"Tracked via Queue reports (Queue Abandoned,\nQueued Contact Volume).\nNot a standalone formula in Agent reports."},
  a:{f:"Contacts Queued =\nCOUNT contacts added to queue\n\nContacts Queued (enqueue timestamp) =\nCOUNT contacts by enqueue timestamp"},
  v:"none"},
 
 {cat:"Volume & Queue Counts",name:"Contacts Abandoned in X Seconds",desc:"Contacts abandoned within a specified time threshold",
-  std:"COUNT of contacts abandoned within X seconds of queuing.
-
-Used to define 'short abandons' often excluded from
-abandonment rate calculations.",
+  std:"COUNT of contacts abandoned within X seconds of queuing.\n\nUsed to define 'short abandons' often excluded from\nabandonment rate calculations.",
   g:{f:null},
  c:{f:null},
  a:{f:"Contacts Abandoned in X Seconds =\nCOUNT contacts abandoned within X seconds\nof being queued"},
  v:"none"},
 
 {cat:"Volume & Queue Counts",name:"Contacts Answered in X Seconds",desc:"Contacts answered within a specified time threshold",
-  std:"COUNT of contacts answered within X seconds of queuing.
-
-Numerator in the Service Level formula.",
+  std:"COUNT of contacts answered within X seconds of queuing.\n\nNumerator in the Service Level formula.",
   g:{f:"Answered in threshold is the basis of SL numerator\n(see Service Level formula)"},
  c:{f:"Contacts answered within threshold forms\nthe numerator of the Service Level calculation"},
  a:{f:"Contacts Answered in X Seconds =\nCOUNT contacts answered within X seconds\n(Used as SL numerator)"},
  v:"none"},
 
 {cat:"Volume & Queue Counts",name:"Contacts Removed from Queue in X Seconds",desc:"Contacts that left the queue within X seconds",
-  std:"COUNT of contacts (answered + abandoned) that left
-the queue within X seconds.
-
-Used for threshold-based reporting.",
+  std:"COUNT of contacts (answered + abandoned) that left\nthe queue within X seconds.\n\nUsed for threshold-based reporting.",
   g:{f:null},
  c:{f:null},
  a:{f:"Contacts Removed from Queue in X Seconds =\nCOUNT contacts removed within X seconds"},
  v:"none"},
 
 {cat:"Volume & Queue Counts",name:"Contacts Resolved in X Seconds",desc:"Contacts fully resolved within X seconds",
-  std:"COUNT of contacts fully resolved within X seconds.
-
-Used for First Contact Resolution and speed metrics.",
+  std:"COUNT of contacts fully resolved within X seconds.\n\nUsed for First Contact Resolution and speed metrics.",
   g:{f:null},
  c:{f:null},
  a:{f:"Contacts Resolved in X Seconds =\nCOUNT contacts resolved within X seconds"},
  v:"none"},
 
 {cat:"Volume & Queue Counts",name:"Average Contact Duration",desc:"Mean total contact duration from initiation to disconnect",
-  std:"SUM (Disconnect Timestamp - Initiation Timestamp)
-/ Contact count
-
-End-to-end lifecycle duration. Broader than AHT
-(includes IVR, queue, and handling time).",
+  std:"SUM (Disconnect Timestamp - Initiation Timestamp)\n/ Contact count\n\nEnd-to-end lifecycle duration. Broader than AHT\n(includes IVR, queue, and handling time).",
   g:{f:null},
  c:{f:"Call Duration = Time end - Time start\n(Dropped Call Summaries report)"},
  a:{f:"Avg Contact Duration =\nΣ (DisconnectTimestamp - InitiationTimestamp)\n/ Contact count"},
  v:"low"},
 
 {cat:"Volume & Queue Counts",name:"Maximum / Oldest Queue Time",desc:"Longest wait time currently in queue",
-  std:"Maximum Queued Time: MAX wait among all contacts.
-Oldest (real-time): duration since earliest contact entered queue.
-
-Key real-time management alert metric.",
+  std:"Maximum Queued Time: MAX wait among all contacts.\nOldest (real-time): duration since earliest contact entered queue.\n\nKey real-time management alert metric.",
   g:{f:null},
  c:{f:null},
  a:{f:"Maximum Queued Time =\nMAX(queue duration)\n\nOldest =\nDuration since oldest contact entered queue\n(Real-time metric)"},
  v:"none"},
 
 {cat:"Volume & Queue Counts",name:"Average Queue Abandon Time",desc:"Mean time contacts waited before abandoning",
-  std:"SUM of queue wait times for abandoned contacts
-/ Abandoned contact count
-
-If avg abandon time > ASA, significant queue pressure exists.",
+  std:"SUM of queue wait times for abandoned contacts\n/ Abandoned contact count\n\nIf avg abandon time > ASA, significant queue pressure exists.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Queue Abandon Time =\nΣ queue abandon duration / Abandoned count\n\nAlso tracked for customer-first callback variant"},
  v:"none"},
 
 {cat:"Volume & Queue Counts",name:"Contacts Hold Disconnect",desc:"Contacts where customer or agent disconnected during hold",
-  std:"COUNT of contacts disconnected while on hold.
-
-High count indicates hold duration exceeding
-customer patience. Sub-metrics: agent vs. customer initiated.",
+  std:"COUNT of contacts disconnected while on hold.\n\nHigh count indicates hold duration exceeding\ncustomer patience. Sub-metrics: agent vs. customer initiated.",
   g:{f:null},
  c:{f:null},
  a:{f:"Contacts Hold Disconnect =\nCOUNT all hold disconnects\n\nContacts Hold Agent Disconnect =\nCOUNT agent disconnected during hold\n\nContacts Hold Customer Disconnect =\nCOUNT customer disconnected during hold"},
@@ -1672,36 +1287,21 @@ customer patience. Sub-metrics: agent vs. customer initiated.",
 
 // ── GENESYS WFM CHANNEL STATS ──────────────────────────────────────────────────
 {cat:"Genesys WFM Channel Statistics",name:"Voice Channel Statistics",desc:"Genesys WFM stat objects for voice interactions",
-  std:"Standard voice KPI stat objects:
-Entered: total contacts received
-Abandoned: left before answer
-Distributed: connected to agent
-Service Level: % answered in threshold
-ASA: avg wait time
-Handle Time: total AHT
-Handled: completed contacts",
+  std:"Standard voice KPI stat objects:\nEntered: total contacts received\nAbandoned: left before answer\nDistributed: connected to agent\nService Level: % answered in threshold\nASA: avg wait time\nHandle Time: total AHT\nHandled: completed contacts",
   g:{f:"WFMTotalNumberCallsEntered: COUNT received\nWFMTotalNumberCallsAband: COUNT abandoned\nWFMTotalNumberCallsDistrib: COUNT distributed\nWFMServiceFactor1: Service level value\nWFMAverTimeBeforeAnswering: Avg wait time\nWFMTotalHandleTime: Total handle time\nWFMTotalNumberCallsHandled: COUNT handled"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Genesys WFM Channel Statistics",name:"Email Channel Statistics",desc:"Genesys WFM stat objects for email interactions",
-  std:"Standard email channel metrics:
-Entered: total emails received
-Handle Time: total handling time (reading + composing + ACW)
-Handled: emails resolved and closed
-
-Email AHT typically 8-15 min vs. 4-6 min for voice.",
+  std:"Standard email channel metrics:\nEntered: total emails received\nHandle Time: total handling time (reading + composing + ACW)\nHandled: emails resolved and closed\n\nEmail AHT typically 8-15 min vs. 4-6 min for voice.",
   g:{f:"WFM_Email_Entered: COUNT interactions (StagingArea)\nWFM_Email_Handle_Time: Total handle time\n  (Agent, GroupAgents, GroupPlaces, Place)\nWFM_Email_Handled: COUNT handled"},
  c:{f:null},
  a:{f:null},
  v:"none"},
 
 {cat:"Genesys WFM Channel Statistics",name:"iWD Channel Statistics",desc:"Genesys WFM stat objects for intelligent workload distribution",
-  std:"iWD (Intelligent Workload Distribution) metrics
-follow the same structure as chat channel:
-Entered, Abandoned, ASA, Distributed, Handle Time, Handled
-Applied to back-office tasks and non-voice work items.",
+  std:"iWD (Intelligent Workload Distribution) metrics\nfollow the same structure as chat channel:\nEntered, Abandoned, ASA, Distributed, Handle Time, Handled\nApplied to back-office tasks and non-voice work items.",
   g:{f:"WFM_iWD_Entered: COUNT iWD interactions\nWFM_iWD_Abandoned: COUNT abandoned\nWFM_iWD_Average_Speed_Answer: Avg answer time\nWFM_iWD_Total_Distributed: COUNT distributed\nWFM_iWD_Handle_Time: Total handle time\nWFM_iWD_Handled: COUNT handled"},
  c:{f:null},
  a:{f:null},
