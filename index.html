@@ -263,11 +263,7 @@ Ring time is excluded.",
  g:{f:"Σ(AHT_i × CallsHandled_i) / Σ(CallsHandled_i)\nWeighted avg per 15-min timestep, weighted by calls handled"},
  c:{f:"Agent Details/Site:\n(Σ ConnDur + Σ WrapDur) / Σ ConnCount\n— hold excluded\n\nAgent Statistics report:\n(Hold + Connected + Wrapup) / Handled\n— hold included"},
  a:{f:"Σ(AgentInteraction + CustomerHold + ACW)\n/ ContactCount\nAll three components always included"},
- d:{f:"AVG(ConversationHandleTimeInSeconds)
-= Talk Time + Hold Time + Wrap-up Time
-(Conversation-level composite)
-
-Session level: AVG(AgentHandlingTimeInSeconds)", n:"D365 SL denominator = answered only. Does not align with industry std for AHT when using sessions."},
+ d:{f:"AVG(ConversationHandleTimeInSeconds)\n= Talk Time + Hold Time + Wrap-up Time\n(Conversation-level composite)\n\nSession level: AVG(AgentHandlingTimeInSeconds)", n:"D365 SL denominator = answered only. Does not align with industry std for AHT when using sessions."},
  v:"high",note:"Cisco AHT (Agent Details) excludes hold; Genesys & Amazon include it"},
 
 {cat:"Core KPIs",name:"Average Speed of Answer (ASA)",desc:"Mean wait time from queue entry to agent answer",
@@ -280,9 +276,7 @@ Also called Average Queue Answer Time.",
   g:{f:"Σ(ASA_i × CallsDistributed_i)\n/ Σ(CallsDistributed_i)\nWeighted avg per timestep by calls distributed"},
  c:{f:"Inbound Reserved Total Time / Reserved Count\n= Σ RingingDuration / Σ RingingCount\n(Simple average)"},
  a:{f:"Avg Queue Answer Time =\navg(AnswerTimestamp - EnqueueTimestamp)\nper answered contact"},
- d:{f:"AVG(ConversationSpeedToAnswerInSeconds)
-Filtered: IncomingConversationOutcomeId = Accepted
-(Queue wait time to first agent answer)"},
+ d:{f:"AVG(ConversationSpeedToAnswerInSeconds)\nFiltered: IncomingConversationOutcomeId = Accepted\n(Queue wait time to first agent answer)"},
  v:"medium",note:"Genesys weights by interval volume; others use simple average"},
 
 {cat:"Core KPIs",name:"Service Level",desc:"% contacts answered within threshold (X seconds)",
@@ -295,10 +289,7 @@ Denominator methodology is the most debated in the industry.",
   g:{f:"Actual SL =\nΣ(SL_i × CallsDistributed_i)\n/ Σ(CallsDistributed_i)\nDenominator = calls distributed (answered only)"},
  c:{f:"(Contacts answered ≤ threshold\n/ (Contacts arrived - Short calls)) × 100\nDenominator excludes abandoned & short calls"},
  a:{f:"(Contacts answered in X seconds\n/ Contacts queued) × 100\nDenominator = ALL contacts queued (incl. abandoned)"},
- d:{f:"Conversations answered within Xs
-/ Total answered conversations × 100
-Thresholds available: 10s, 20s, 30s, 40s, 60s, 120s
-Note: denominator = answered only (not total offered)", n:"D365 SL uses answered denominator, same as Genesys — not total offered"},
+ d:{f:"Conversations answered within Xs\n/ Total answered conversations × 100\nThresholds available: 10s, 20s, 30s, 40s, 60s, 120s\nNote: denominator = answered only (not total offered)", n:"D365 SL uses answered denominator, same as Genesys — not total offered"},
  v:"high",note:"Genesys: denominator = answered; Amazon: denominator = all queued; Cisco: excludes short calls"},
 
 {cat:"Core KPIs",name:"Occupancy",desc:"% time agents spent in active work vs. available time",
@@ -321,10 +312,7 @@ abandon within a short grace threshold (usually <5 sec).",
   g:{f:"Abandons Factor (Actual) =\nΣ(Abandons_i × CallsDistributed_i)\n/ Σ(CallsDistributed_i)\nWeighted by calls distributed per timestep"},
  c:{f:"Not explicitly defined as a standalone % formula\nin Analyzer documentation.\nTypically tracked via abandoned contact counts."},
  a:{f:"(Contacts abandoned / Contacts queued) × 100\nDefinition: customer disconnected while waiting\nin queue before connecting to agent"},
- d:{f:"Abandoned Incoming Conversations
-/ Total Incoming Conversations × 100
-Note: currently includes system disconnects
-in the numerator (does not align with industry std)", n:"Known limitation: includes system-initiated disconnects in abandon count"},
+ d:{f:"Abandoned Incoming Conversations\n/ Total Incoming Conversations × 100\nNote: currently includes system disconnects\nin the numerator (does not align with industry std)", n:"Known limitation: includes system-initiated disconnects in abandon count"},
  v:"medium",note:"Genesys uses answered-calls denominator and timestep weighting; Amazon uses flat queued count"},
 
 {cat:"Core KPIs",name:"Contacts Handled",desc:"Total number of contacts successfully handled",
@@ -528,8 +516,7 @@ Component of AHT.",
   g:{f:"Included in AHT calculation\n(not broken out separately in CCPerf docs)"},
  c:{f:"Inbound Connected Total Time = Σ ConnectedDuration\n(Excludes hold and consult time)"},
  a:{f:"Agent Interaction Time =\nΣ AgentInteractionDuration\n(where both duration and connected timestamp present)"},
- d:{f:"SUM(ConversationTalkTimeInSeconds)
-(Total talk time across all conversations)"},
+ d:{f:"SUM(ConversationTalkTimeInSeconds)\n(Total talk time across all conversations)"},
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Inbound Hold Count",desc:"Number of times callers were placed on hold",
@@ -550,8 +537,7 @@ through better agent preparation.",
   g:{f:"Included in AHT calculation\n(not a standalone metric in CCPerf docs)"},
  c:{f:"Inbound Hold Total Time = Σ HoldDuration"},
  a:{f:"Customer Hold Time =\nΣ Agent.CustomerHoldDuration"},
- d:{f:"SUM(ConversationHoldTimeInSeconds)
-(Total hold time across all conversations)"},
+ d:{f:"SUM(ConversationHoldTimeInSeconds)\n(Total hold time across all conversations)"},
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Average Inbound Hold Time",desc:"Mean hold duration per inbound contact",
@@ -562,8 +548,7 @@ Common benchmark: < 60 seconds.",
   g:{f:null},
  c:{f:"Avg Inbound Hold Time =\nΣ HoldDuration / Σ HoldCount"},
  a:{f:"Avg Customer Hold Time =\nΣ CustomerHoldDuration\n/ contacts with hold\n\nAvg Customer Hold Time (All Contacts) =\nΣ CustomerHoldDuration / total contacts"},
- d:{f:"AVG(ConversationHoldTimeInSeconds)
-(Conversation-level hold time avg)"},
+ d:{f:"AVG(ConversationHoldTimeInSeconds)\n(Conversation-level hold time avg)"},
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Inbound Contact Total Time",desc:"Total inbound interaction duration (talk + hold combined)",
@@ -602,8 +587,7 @@ complex dispositions or system inefficiency.",
   g:{f:"Included in AHT calculation\n(not a standalone metric in CCPerf docs)"},
  c:{f:"Inbound Wrapup Total Time = Σ WrapupDuration"},
  a:{f:"After Contact Work Time =\nIf ACW duration present → ACW duration\nElse if connected → 0\nFinal = Σ all results"},
- d:{f:"SUM(ConversationWrapUpTimeInSeconds)
-(Total wrap-up time across all conversations)"},
+ d:{f:"SUM(ConversationWrapUpTimeInSeconds)\n(Total wrap-up time across all conversations)"},
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Average Inbound Wrapup Time",desc:"Mean ACW/wrapup duration per inbound contact",
@@ -614,8 +598,7 @@ Common benchmark: 30-60 seconds.",
   g:{f:null},
  c:{f:"Avg Inbound Wrapup Time =\nΣ WrapupDuration / Σ WrapupCount"},
  a:{f:"Avg After Contact Work Time =\nΣ ACWDuration / ContactCount\n(0 if connected but no ACW recorded)"},
- d:{f:"AVG(ConversationWrapUpTimeInSeconds)
-(Conversation-level wrap-up time avg)"},
+ d:{f:"AVG(ConversationWrapUpTimeInSeconds)\n(Conversation-level wrap-up time avg)"},
  v:"low"},
 
 {cat:"Inbound Metrics",name:"Inbound Average Handle Time (AHT)",desc:"Mean total handling time for inbound contacts",
@@ -907,9 +890,7 @@ Also called Consultative Transfer. Excludes blind transfers.",
   g:{f:null},
  c:{f:"Agent Transfer = Σ AgentToAgentTransferCount"},
  a:{f:"Contacts Transferred Out By Agent =\nCOUNT contacts transferred out by agent action"},
- d:{f:"CALCULATE(COUNTROWS(FactConversation),
-  FactConversation[TransferCount] > 0)
-(Conversations with at least one transfer)"},
+ d:{f:"CALCULATE(COUNTROWS(FactConversation),\n  FactConversation[TransferCount] > 0)\n(Conversations with at least one transfer)"},
  v:"low"},
 
 {cat:"Consult / Transfer / Conference",name:"Agent Requeue",desc:"Inbound calls returned to queue by agent",
@@ -950,8 +931,7 @@ Breakdown: internal vs. external vs. to queue.",
   g:{f:null},
  c:{f:null},
  a:{f:"Contacts Transferred Out =\nCOUNT transferred-out contacts\n\nContacts Transferred Out External =\nCOUNT externally transferred\n\nContacts Transferred Out Internal =\nCOUNT internally transferred"},
- d:{f:"Transferred Conversations / Total Conversations × 100
-(Transfer Rate at conversation level)"},
+ d:{f:"Transferred Conversations / Total Conversations × 100\n(Transfer Rate at conversation level)"},
  v:"none"},
 
 // ── SCHEDULING & ADHERENCE ─────────────────────────────────────────────────────
@@ -1312,8 +1292,7 @@ Part of talk/listen balance analysis.",
   g:{f:null},
  c:{f:null},
  a:{f:"Avg Agent Talk Time =\nΣ Agent talk time intervals / Contact count"},
- d:{f:"AVG(ConversationTalkTimeInSeconds)
-(Conversation-level talk time avg)"},
+ d:{f:"AVG(ConversationTalkTimeInSeconds)\n(Conversation-level talk time avg)"},
  v:"none"},
 
 {cat:"Contact Lens / Conversational Analytics",name:"Average Customer Talk Time",desc:"Mean customer speaking time per contact",
